@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import type { Persona, Generation, GeneratedImage } from '~/lib/types'
 import { Workflow, Bell, Plus } from 'lucide-react'
-import { CharacterCard } from '~/components/ui'
+import { CharacterCard, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '~/components/ui'
 import { PersonaForm } from '~/components/PersonaForm'
 import { getPersonas, createPersona } from '~/server/personas'
 import { getGenerations } from '~/server/generations'
@@ -167,29 +167,37 @@ function HomePage() {
               See all
             </Link>
           </div>
-          <div className="-mx-6 flex gap-3 overflow-x-auto px-6 scrollbar-none">
-            {recentItems.map((item) => (
-              <Link
-                key={`${item.generationId}-${item.index}`}
-                to="/image/$generationId/$index"
-                params={{
-                  generationId: item.generationId,
-                  index: String(item.index),
-                }}
-                className="h-[120px] w-[120px] flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
-              >
-                {item.thumbnailUrl ? (
-                  <img
-                    src={item.thumbnailUrl}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="h-full w-full bg-surface-muted" />
-                )}
-              </Link>
-            ))}
-          </div>
+          <Carousel opts={{ align: 'start', dragFree: true }}>
+            <CarouselContent className="gap-3">
+              {recentItems.map((item) => (
+                <CarouselItem
+                  key={`${item.generationId}-${item.index}`}
+                  className="basis-[120px]"
+                >
+                  <Link
+                    to="/image/$generationId/$index"
+                    params={{
+                      generationId: item.generationId,
+                      index: String(item.index),
+                    }}
+                    className="block h-[120px] w-[120px] overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
+                  >
+                    {item.thumbnailUrl ? (
+                      <img
+                        src={item.thumbnailUrl}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-surface-muted" />
+                    )}
+                  </Link>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="bg-white text-text-secondary shadow-md backdrop-blur-none border-border" />
+            <CarouselNext className="bg-white text-text-secondary shadow-md backdrop-blur-none border-border" />
+          </Carousel>
         </div>
       )}
 

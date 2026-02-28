@@ -1,9 +1,17 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, Download, ImagePlus, Share2 } from 'lucide-react'
 import type { Generation } from '~/lib/types'
 import { getGeneration } from '~/server/generations'
 import { getOutputImage } from '~/server/comfyui'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  type CarouselApi,
+} from '~/components/ui/carousel'
 
 export const Route = createFileRoute('/image/$generationId/$index')({
   component: ImageDetailPage,
@@ -11,21 +19,14 @@ export const Route = createFileRoute('/image/$generationId/$index')({
 
 function ImageDetailPage() {
   const { generationId, index } = Route.useParams()
-  const navigate = useNavigate()
   const imageIndex = parseInt(index, 10)
 
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [loading, setLoading] = useState(true)
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrls, setImageUrls] = useState<(string | null)[]>([])
   const [showCopiedToast, setShowCopiedToast] = useState(false)
-
-  // Touch/zoom state
-  const [scale, setScale] = useState(1)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const lastTapRef = useRef(0)
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null)
-  const initialDistanceRef = useRef<number | null>(null)
-  const initialScaleRef = useRef(1)
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [currentIndex, setCurrentIndex] = useState(imageIndex)
 
   useEffect(() => {
     async function load() {
@@ -42,115 +43,40 @@ function ImageDetailPage() {
 
   useEffect(() => {
     if (!generation) return
-    const currentImage = generation.images[imageIndex]
-    if (!currentImage) return
-
-    let cancelled = false
-    async function loadImage() {
+    setImageUrls(generation.images.map(() => null))
+    generation.images.forEach(async (img, i) => {
       try {
         const result = await getOutputImage({
-          data: {
-            filename: currentImage.filename,
-            subfolder: currentImage.subfolder,
-            type: currentImage.type,
-          },
+          data: { filename: img.filename, subfolder: img.subfolder, type: img.type },
         })
-        if (!cancelled) setImageUrl(result.dataUrl)
+        setImageUrls((prev) => {
+          const next = [...prev]
+          next[i] = result.dataUrl
+          return next
+        })
       } catch {
-        // Leave as placeholder
+        // Leave as null placeholder
       }
-    }
-
-    setImageUrl(null)
-    loadImage()
-    return () => { cancelled = true }
-  }, [generation, imageIndex])
+    })
+  }, [generation])
 
   useEffect(() => {
-    setScale(1)
-    setPosition({ x: 0, y: 0 })
-  }, [imageIndex])
+    if (!carouselApi) return
+    const onSelect = () => setCurrentIndex(carouselApi.selectedScrollSnap())
+    carouselApi.on('select', onSelect)
+    return () => { carouselApi.off('select', onSelect) }
+  }, [carouselApi])
 
   const totalImages = generation?.images.length ?? 0
   const prompt = generation?.params.prompt ?? ''
   const title = prompt.length > 40 ? prompt.slice(0, 40) + '…' : prompt || 'Untitled'
 
-  const handleDoubleTap = useCallback(() => {
-    if (scale > 1) {
-      setScale(1)
-      setPosition({ x: 0, y: 0 })
-    } else {
-      setScale(2)
-    }
-  }, [scale])
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX
-        const dy = e.touches[0].clientY - e.touches[1].clientY
-        initialDistanceRef.current = Math.hypot(dx, dy)
-        initialScaleRef.current = scale
-      } else if (e.touches.length === 1) {
-        const now = Date.now()
-        if (now - lastTapRef.current < 300) {
-          handleDoubleTap()
-          lastTapRef.current = 0
-          return
-        }
-        lastTapRef.current = now
-        touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-      }
-    },
-    [scale, handleDoubleTap],
-  )
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 2 && initialDistanceRef.current !== null) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX
-        const dy = e.touches[0].clientY - e.touches[1].clientY
-        const distance = Math.hypot(dx, dy)
-        const newScale = Math.min(5, Math.max(1, initialScaleRef.current * (distance / initialDistanceRef.current)))
-        setScale(newScale)
-        if (newScale === 1) setPosition({ x: 0, y: 0 })
-      } else if (e.touches.length === 1 && scale > 1) {
-        if (touchStartRef.current) {
-          const dx = e.touches[0].clientX - touchStartRef.current.x
-          const dy = e.touches[0].clientY - touchStartRef.current.y
-          setPosition((prev) => ({ x: prev.x + dx, y: prev.y + dy }))
-          touchStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-        }
-      }
-    },
-    [scale],
-  )
-
-  const handleTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      if (e.touches.length === 0 && touchStartRef.current && scale === 1) {
-        const endX = e.changedTouches[0].clientX
-        const dx = endX - touchStartRef.current.x
-        if (Math.abs(dx) > 80) {
-          if (dx < 0 && imageIndex < totalImages - 1) {
-            navigate({ to: '/image/$generationId/$index', params: { generationId, index: String(imageIndex + 1) } })
-          } else if (dx > 0 && imageIndex > 0) {
-            navigate({ to: '/image/$generationId/$index', params: { generationId, index: String(imageIndex - 1) } })
-          }
-        }
-      }
-      initialDistanceRef.current = null
-      touchStartRef.current = null
-    },
-    [scale, imageIndex, totalImages, navigate, generationId],
-  )
-
-  const handleCopyPrompt = () => {
+  const handleCopyPrompt = useCallback(() => {
     navigator.clipboard.writeText(prompt).then(() => {
       setShowCopiedToast(true)
       setTimeout(() => setShowCopiedToast(false), 2000)
     })
-  }
+  }, [prompt])
 
   const getRelativeTime = (dateString: string) => {
     const now = Date.now()
@@ -197,51 +123,60 @@ function ImageDetailPage() {
           <span className="text-[15px] font-medium text-text">Back</span>
         </Link>
         <h1 className="text-[15px] font-semibold text-text">
-          Image {imageIndex + 1} of {totalImages}
+          {totalImages > 1 ? `Image ${currentIndex + 1} of ${totalImages}` : 'Image'}
         </h1>
         <Share2 size={20} className="text-[#6D6C6A]" />
       </header>
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-4 px-6 pb-5">
-        {/* Image preview */}
-        <div
-          className="relative h-[340px] w-full overflow-hidden rounded-[20px] bg-surface-muted [box-shadow:0_2px_12px_#1A191808]"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+        {/* Carousel */}
+        <Carousel
+          setApi={setCarouselApi}
+          opts={{ startIndex: imageIndex, loop: false }}
+          className="h-[340px] w-full rounded-[20px] bg-surface-muted [box-shadow:0_2px_12px_#1A191808]"
         >
-          <div
-            className="h-full w-full transition-transform duration-100"
-            style={{
-              transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
-            }}
-          >
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={`Image ${imageIndex + 1}`}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-surface-muted">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              </div>
-            )}
-          </div>
+          <CarouselContent>
+            {generation.images.map((_, i) => (
+              <CarouselItem key={i}>
+                {imageUrls[i] ? (
+                  <img
+                    src={imageUrls[i]!}
+                    alt={`Image ${i + 1}`}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-surface-muted">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  </div>
+                )}
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {totalImages > 1 && <CarouselPrevious />}
+          {totalImages > 1 && <CarouselNext />}
 
           {/* Navigation dots */}
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
-            {Array.from({ length: totalImages }, (_, i) => (
-              <div
-                key={i}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === imageIndex ? 'w-6 bg-primary' : 'w-1.5 bg-white/40'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
+          {totalImages > 1 && (
+            <div className="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-1.5">
+              {Array.from({ length: totalImages }, (_, i) => (
+                <button
+                  key={i}
+                  aria-label={`Image ${i + 1}`}
+                  onClick={() => carouselApi?.scrollTo(i)}
+                  className="flex items-center justify-center py-2 px-0.5"
+                >
+                  <div
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === currentIndex ? 'w-6 bg-primary' : 'w-1.5 bg-white/40'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </Carousel>
 
         {/* Title */}
         <h2 className="text-[22px] font-semibold tracking-[-0.3px] text-text leading-tight">

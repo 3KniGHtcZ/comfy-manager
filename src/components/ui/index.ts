@@ -39,3 +39,6 @@ export type { HeaderBrandProps } from "./header-brand"
 
 export { HeaderBack } from "./header-back"
 export type { HeaderBackProps } from "./header-back"
+
+export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "./carousel"
+export type { CarouselApi } from "./carousel"
