@@ -5,3 +5,7 @@ dist
 *.md
 .env
 .claude
+.github
+src/**/__tests__
+src/test
+vitest.config.ts

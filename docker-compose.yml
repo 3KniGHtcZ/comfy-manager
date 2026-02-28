@@ -1,6 +1,6 @@
 services:
   comfy-manager:
-    build: .
+    image: ghcr.io/${GITHUB_REPOSITORY:-your-username/comfy-manager}:latest
     ports:
       - "3000:3000"
     environment:
@@ -8,8 +8,9 @@ services:
       - NODE_ENV=production
     volumes:
       - app-data:/app/data
-      - ./workflows:/app/workflows
+      - app-workflows:/app/workflows
     restart: unless-stopped
 
 volumes:
   app-data:
+  app-workflows:
