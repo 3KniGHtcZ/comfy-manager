@@ -26,7 +26,7 @@ const RETRY_DELAY_MS = 2000
  *   data: <json>\n
  *   \n
  */
-function parseSSEChunk(chunk: string): Array<{ event: string; data: string }> {
+export function parseSSEChunk(chunk: string): Array<{ event: string; data: string }> {
   const events: Array<{ event: string; data: string }> = []
   const lines = chunk.split('\n')
 
