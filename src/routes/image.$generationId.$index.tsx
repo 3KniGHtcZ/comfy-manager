@@ -17,8 +17,16 @@ export const Route = createFileRoute('/image/$generationId/$index')({
   component: ImageDetailPage,
 })
 
+function downloadDataUrl(dataUrl: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = dataUrl
+  a.download = filename
+  a.click()
+}
+
 function ImageDetailPage() {
   const { generationId, index } = Route.useParams()
+  const navigate = useNavigate()
   const imageIndex = parseInt(index, 10)
 
   const [generation, setGeneration] = useState<Generation | null>(null)
@@ -78,6 +86,28 @@ function ImageDetailPage() {
     })
   }, [prompt])
 
+  const handleDownload = useCallback(() => {
+    const url = imageUrls[currentIndex]
+    const filename = generation?.images[currentIndex]?.filename ?? `image-${currentIndex + 1}.png`
+    if (url) downloadDataUrl(url, filename)
+  }, [imageUrls, currentIndex, generation])
+
+  const handleShare = useCallback(() => {
+    if (navigator.share) {
+      navigator.share({ title, text: prompt, url: window.location.href }).catch(() => {})
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        setShowCopiedToast(true)
+        setTimeout(() => setShowCopiedToast(false), 2000)
+      })
+    }
+  }, [title, prompt])
+
+  const handleUseAsInput = useCallback(() => {
+    const personaId = generation?.params.personaId
+    navigate({ to: '/generate', search: personaId ? { personaId } : {} })
+  }, [navigate, generation])
+
   const getRelativeTime = (dateString: string) => {
     const now = Date.now()
     const date = new Date(dateString).getTime()
@@ -125,7 +155,9 @@ function ImageDetailPage() {
         <h1 className="text-[15px] font-semibold text-text">
           {totalImages > 1 ? `Image ${currentIndex + 1} of ${totalImages}` : 'Image'}
         </h1>
-        <Share2 size={20} className="text-[#6D6C6A]" />
+        <button onClick={handleShare} className="transition-opacity active:opacity-80" aria-label="Share image">
+          <Share2 size={20} className="text-[#6D6C6A]" />
+        </button>
       </header>
 
       {/* Content */}
@@ -217,11 +249,18 @@ function ImageDetailPage() {
 
         {/* Action buttons */}
         <div className="flex gap-[10px]">
-          <button className="flex flex-1 h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[15px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] transition-opacity active:opacity-80">
+          <button
+            onClick={handleDownload}
+            disabled={!imageUrls[currentIndex]}
+            className="flex flex-1 h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[15px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] transition-opacity active:opacity-80 disabled:opacity-60"
+          >
             <Download size={18} />
             Download
           </button>
-          <button className="flex flex-1 h-12 items-center justify-center gap-2 rounded-full bg-white text-[15px] font-semibold text-primary [box-shadow:0_2px_12px_#1A191808] transition-opacity active:opacity-80">
+          <button
+            onClick={handleUseAsInput}
+            className="flex flex-1 h-12 items-center justify-center gap-2 rounded-full bg-white text-[15px] font-semibold text-primary [box-shadow:0_2px_12px_#1A191808] transition-opacity active:opacity-80"
+          >
             <ImagePlus size={18} />
             Use as Input
           </button>

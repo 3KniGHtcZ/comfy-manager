@@ -136,24 +136,6 @@
     "createdAt": "2026-02-27T22:10:38.310Z"
   },
   {
-    "id": "f1efa885-d417-486a-ad2e-555c368a9836",
-    "params": {
-      "test": true
-    },
-    "status": "error",
-    "images": [],
-    "createdAt": "2026-02-28T09:36:52.052Z"
-  },
-  {
-    "id": "febb93e4-c699-422f-b86f-a397d3aa4eaa",
-    "params": {
-      "test": true
-    },
-    "status": "error",
-    "images": [],
-    "createdAt": "2026-02-28T09:37:10.206Z"
-  },
-  {
     "id": "b18850e8-6e30-431b-9623-a40a11ab1bdb",
     "personaId": "luna",
     "params": {

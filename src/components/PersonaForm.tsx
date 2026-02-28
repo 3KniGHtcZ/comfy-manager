@@ -39,7 +39,7 @@ export function PersonaForm({
   if (!open) return null
 
   const handleSave = () => {
-    if (!name.trim() || !loraName.trim()) return
+    if (!name.trim()) return
     onSave({ name, description, avatar, loraName, loraStrength })
     onClose()
   }
@@ -133,7 +133,7 @@ export function PersonaForm({
           </button>
           <button
             onClick={handleSave}
-            disabled={!name.trim() || !loraName.trim()}
+            disabled={!name.trim()}
             className="flex-1 rounded-xl bg-primary py-3 font-medium text-white transition-colors hover:opacity-90 disabled:opacity-40"
           >
             Save

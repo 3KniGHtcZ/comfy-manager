@@ -4,6 +4,14 @@ import { ChevronLeft, Download, RefreshCw } from 'lucide-react'
 import type { Generation } from '~/lib/types'
 import { ResultGrid } from '~/components/ResultGrid'
 import { getGeneration } from '~/server/generations'
+import { getOutputImage } from '~/server/comfyui'
+
+function downloadDataUrl(dataUrl: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = dataUrl
+  a.download = filename
+  a.click()
+}
 
 export const Route = createFileRoute('/results/$generationId')({
   component: ResultsGalleryPage,
@@ -14,6 +22,7 @@ function ResultsGalleryPage() {
   const navigate = useNavigate()
   const [generation, setGeneration] = useState<Generation | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isDownloading, setIsDownloading] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -68,6 +77,22 @@ function ResultsGalleryPage() {
     navigate({ to: '/generate', search: { personaId: generation.personaId } })
   }
 
+  const handleDownloadAll = async () => {
+    if (isDownloading) return
+    setIsDownloading(true)
+    for (const img of generation.images) {
+      try {
+        const result = await getOutputImage({
+          data: { filename: img.filename, subfolder: img.subfolder, type: img.type },
+        })
+        downloadDataUrl(result.dataUrl, img.filename)
+      } catch {
+        // Skip failed images
+      }
+    }
+    setIsDownloading(false)
+  }
+
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Header */}
@@ -77,7 +102,14 @@ function ResultsGalleryPage() {
           <span className="text-[15px] font-medium text-text">Back</span>
         </Link>
         <h1 className="text-[15px] font-semibold text-text">Results</h1>
-        <Download size={20} className="text-primary" />
+        <button
+          onClick={handleDownloadAll}
+          disabled={isDownloading}
+          className="transition-opacity active:opacity-80 disabled:opacity-50"
+          aria-label="Download all images"
+        >
+          <Download size={20} className="text-primary" />
+        </button>
       </header>
 
       {/* Content */}
@@ -119,7 +151,11 @@ function ResultsGalleryPage() {
 
         {/* Action buttons */}
         <div className="flex flex-col gap-[10px]">
-          <button className="flex h-12 w-full items-center justify-center gap-[10px] rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[15px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] transition-opacity active:opacity-80">
+          <button
+            onClick={handleDownloadAll}
+            disabled={isDownloading}
+            className="flex h-12 w-full items-center justify-center gap-[10px] rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[15px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] transition-opacity active:opacity-80 disabled:opacity-60"
+          >
             <Download size={18} />
             Download All
           </button>

@@ -80,14 +80,8 @@ function GenerateSetupPage() {
       batchCount,
     }
 
-    console.log('[generate] calling prepare + navigate to /generating')
     prepare(params)
-    const ssVal = sessionStorage.getItem('_pendingGenParams')
-    console.log('[generate] sessionStorage after prepare:', ssVal?.slice(0, 50))
-    // Copy to localStorage for cross-reload debugging
-    if (ssVal) localStorage.setItem('__debug_pendingParams', ssVal)
     navigate({ to: '/generating' })
-    console.log('[generate] navigate() called')
   }
 
   if (loading) {

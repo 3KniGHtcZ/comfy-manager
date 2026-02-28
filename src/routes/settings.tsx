@@ -248,7 +248,16 @@ function SettingsPage() {
           {/* Default Seed Mode */}
           <div className="flex items-center justify-between">
             <span className="text-[14px] font-medium text-text">Default Seed Mode</span>
-            <span className="text-[13px] capitalize text-[#6D6C6A]">{defaultSeedMode}</span>
+            <button
+              onClick={() => {
+                const next = defaultSeedMode === 'random' ? 'fixed' : 'random'
+                setDefaultSeedMode(next)
+                saveSettings({ defaults: { cfg, steps: defaultSteps, seedMode: next } })
+              }}
+              className="text-[13px] capitalize text-primary transition-opacity active:opacity-70"
+            >
+              {defaultSeedMode}
+            </button>
           </div>
         </div>
 

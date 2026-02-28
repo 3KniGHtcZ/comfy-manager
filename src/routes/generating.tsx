@@ -34,7 +34,6 @@ function GeneratingPage() {
 
   const executeCalledRef = useRef(false)
   useEffect(() => {
-    console.log('[generating] effect: status=', status, 'executeCalledRef=', executeCalledRef.current)
     if (executeCalledRef.current) return
 
     if (status === 'preparing') {
@@ -43,8 +42,6 @@ function GeneratingPage() {
     } else if (status === 'idle') {
       // SSR full-page reload: recover params from sessionStorage and re-prepare
       const stored = sessionStorage.getItem('_pendingGenParams')
-      const lsDebug = localStorage.getItem('__debug_pendingParams')
-      console.log('[generating] idle: sessionStorage=', stored ? 'HAS_PARAMS' : 'EMPTY', 'localStorage_debug=', lsDebug ? 'HAS' : 'EMPTY')
       if (stored) {
         try {
           const params = JSON.parse(stored)
@@ -123,12 +120,10 @@ function GeneratingPage() {
 
   useEffect(() => {
     if (status === 'idle') {
-      console.log('[generating] idle redirect timer started')
       const timer = setTimeout(() => {
-        console.log('[generating] idle redirect firing')
         navigate({ to: '/' })
       }, 1500)
-      return () => { console.log('[generating] idle redirect timer cleared'); clearTimeout(timer) }
+      return () => { clearTimeout(timer) }
     }
   }, [status, navigate])
 
