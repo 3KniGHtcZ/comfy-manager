@@ -1,0 +1,279 @@
+[
+  {
+    "id": "8a132efc-90eb-484a-90e6-d31cbace1546",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "A sunset over mountains",
+      "aspectRatio": "1:1",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 1
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T18:15:56.165Z"
+  },
+  {
+    "id": "a2ec9fb5-447d-4bd3-b6ca-4c21a1fc8a8e",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "a beautiful sunset over the ocean",
+      "aspectRatio": "1:1",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 4
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T18:31:50.716Z"
+  },
+  {
+    "id": "592d075a-3587-412d-9082-c9d976d44e36",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "sunset over the ocean",
+      "aspectRatio": "1:1",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 4
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T18:38:41.378Z"
+  },
+  {
+    "id": "e8daf224-6f4b-42d9-8257-b49907ee527c",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "",
+      "aspectRatio": "1:1",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 4
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T18:40:49.712Z"
+  },
+  {
+    "id": "880bbcba-1625-40ac-979f-0429bb511ae3",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "",
+      "aspectRatio": "1:1",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 4
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T18:44:07.246Z"
+  },
+  {
+    "id": "a100e5df-2c8c-4ad0-b6ca-b5d988c1eaae",
+    "personaId": "ela",
+    "params": {
+      "personaId": "ela",
+      "prompt": "",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 2
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T22:05:13.599Z"
+  },
+  {
+    "id": "b8b10d4b-e9ac-424b-b96f-a1319b0161cb",
+    "personaId": "ela",
+    "params": {
+      "personaId": "ela",
+      "prompt": "beautiful young woman, smiling, outdoor cafe, natural light, bokeh background",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 1
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T22:07:36.432Z"
+  },
+  {
+    "id": "ceb848ea-5916-4073-8540-9b7736a8df09",
+    "personaId": "ela",
+    "params": {
+      "personaId": "ela",
+      "prompt": "beautiful young woman, smiling, cafe",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 1
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-27T22:10:38.310Z"
+  },
+  {
+    "id": "f1efa885-d417-486a-ad2e-555c368a9836",
+    "params": {
+      "test": true
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-28T09:36:52.052Z"
+  },
+  {
+    "id": "febb93e4-c699-422f-b86f-a397d3aa4eaa",
+    "params": {
+      "test": true
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-28T09:37:10.206Z"
+  },
+  {
+    "id": "b18850e8-6e30-431b-9623-a40a11ab1bdb",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "a serene mountain landscape at sunset, cinematic lighting",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 1
+    },
+    "status": "completed",
+    "images": [
+      {
+        "filename": "ComfyUI_00053_.png",
+        "subfolder": "",
+        "type": "output"
+      }
+    ],
+    "createdAt": "2026-02-28T11:28:24.129Z"
+  },
+  {
+    "id": "62060974-3e52-45d6-ad1e-c8bceb83c6c4",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "a fantasy castle on a cliff by the ocean, dramatic sky",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 1
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-28T11:29:17.508Z"
+  },
+  {
+    "id": "a6ae0c3f-66b5-468d-8d13-b0e337d291a9",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "a mystical forest with glowing mushrooms, fantasy art",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 2
+    },
+    "status": "error",
+    "images": [],
+    "createdAt": "2026-02-28T11:40:29.108Z"
+  },
+  {
+    "id": "b45447f0-ce87-4afc-9d72-9356d05147ec",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "a serene forest path at golden hour",
+      "aspectRatio": "1:1",
+      "resolution": 512,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 2
+    },
+    "status": "completed",
+    "images": [
+      {
+        "filename": "ComfyUI_00057_.png",
+        "subfolder": "",
+        "type": "output"
+      },
+      {
+        "filename": "ComfyUI_00058_.png",
+        "subfolder": "",
+        "type": "output"
+      }
+    ],
+    "createdAt": "2026-02-28T12:20:15.201Z"
+  },
+  {
+    "id": "e6b20e03-4bed-4d35-a634-259df6abd714",
+    "personaId": "luna",
+    "params": {
+      "personaId": "luna",
+      "prompt": "sunny beach",
+      "aspectRatio": "4:3",
+      "resolution": 1024,
+      "steps": 30,
+      "seedMode": "random",
+      "cfg": 7.5,
+      "batchCount": 4
+    },
+    "status": "completed",
+    "images": [
+      {
+        "filename": "ComfyUI_00059_.png",
+        "subfolder": "",
+        "type": "output"
+      },
+      {
+        "filename": "ComfyUI_00060_.png",
+        "subfolder": "",
+        "type": "output"
+      },
+      {
+        "filename": "ComfyUI_00061_.png",
+        "subfolder": "",
+        "type": "output"
+      },
+      {
+        "filename": "ComfyUI_00062_.png",
+        "subfolder": "",
+        "type": "output"
+      }
+    ],
+    "createdAt": "2026-02-28T13:09:20.897Z"
+  }
+]
