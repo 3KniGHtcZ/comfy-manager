@@ -52,7 +52,7 @@ export const getGenerations = createServerFn({ method: 'GET' })
     if (data.search) {
       const query = data.search.toLowerCase()
       items = items.filter((g) =>
-        g.params.prompt.toLowerCase().includes(query),
+        (g.params.prompt ?? '').toLowerCase().includes(query),
       )
     }
 
