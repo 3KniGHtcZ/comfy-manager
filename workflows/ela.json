@@ -1,0 +1,756 @@
+{
+  "1": {
+    "inputs": {
+      "ckpt_name": "SDXL\\photorealisticAllPurpose_v40.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "4": {
+    "inputs": {
+      "text": "deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, disconnected limbs, malformed hands, extra fingers, (worst quality, low quality, normal quality:1.4), jpeg artifacts, signature, watermark, username, censorship, censored",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "6": {
+    "inputs": {
+      "resolution": "896x1152 (0.78)",
+      "batch_size": 1,
+      "width_override": 0,
+      "height_override": 0
+    },
+    "class_type": "SDXLEmptyLatentSizePicker+",
+    "_meta": {
+      "title": "\ud83d\udd27 Empty Latent Size Picker"
+    }
+  },
+  "7": {
+    "inputs": {
+      "samples": [
+        "165",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "8": {
+    "inputs": {
+      "images": [
+        "7",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "79": {
+    "inputs": {
+      "text": "RAW photo, candid selfie of Lexi and Klara in a dimly lit dorm room, Lexi is a 25-year-old brunette with chestnut hair and green eyes, athletic body, wearing a loose t-shirt falling off one shoulder, kneeling between the legs of Klara who is sitting on the edge of a bed, Klara is a petite blonde with a nipple piercing visible, wearing unbuttoned denim shorts, Klara's hand is gripping Lexi's hair, sexual tension, intimate atmosphere, soft warm lighting, high detail, photorealistic",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "104": {
+    "inputs": {
+      "model_name": "sam_vit_b_01ec64.pth",
+      "device_mode": "AUTO"
+    },
+    "class_type": "SAMLoader",
+    "_meta": {
+      "title": "SAMLoader (Impact)"
+    }
+  },
+  "105": {
+    "inputs": {
+      "model_name": "bbox/hand_yolov8s.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "106": {
+    "inputs": {
+      "text": "bad quality, worst quality, low quality,",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Face Negative Prompt"
+    }
+  },
+  "107": {
+    "inputs": {
+      "value": 2
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Number Of Passes"
+    }
+  },
+  "108": {
+    "inputs": {
+      "text": "hand, close-up, amateur photo, film grain",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Face Prompt"
+    }
+  },
+  "111": {
+    "inputs": {
+      "guide_size": 1024,
+      "guide_size_for": true,
+      "max_size": 1024,
+      "seed": [
+        "112",
+        0
+      ],
+      "steps": 5,
+      "cfg": 1,
+      "sampler_name": "lcm",
+      "scheduler": "ddim_uniform",
+      "denoise": 0.06,
+      "feather": 9,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "bbox_threshold": 0.37000000000000005,
+      "bbox_dilation": 4,
+      "bbox_crop_factor": 1.5,
+      "sam_detection_hint": "vertical-2",
+      "sam_dilation": 12,
+      "sam_threshold": 0.3500000000000001,
+      "sam_bbox_expansion": 4,
+      "sam_mask_hint_threshold": 0.7000000000000002,
+      "sam_mask_hint_use_negative": "False",
+      "drop_size": 10,
+      "wildcard": "",
+      "cycle": [
+        "107",
+        0
+      ],
+      "inpaint_model": false,
+      "noise_mask_feather": 20,
+      "tiled_encode": false,
+      "tiled_decode": false,
+      "image": [
+        "140",
+        0
+      ],
+      "model": [
+        "186",
+        0
+      ],
+      "clip": [
+        "186",
+        1
+      ],
+      "vae": [
+        "1",
+        2
+      ],
+      "positive": [
+        "108",
+        0
+      ],
+      "negative": [
+        "106",
+        0
+      ],
+      "bbox_detector": [
+        "105",
+        0
+      ],
+      "sam_model_opt": [
+        "104",
+        0
+      ]
+    },
+    "class_type": "FaceDetailer",
+    "_meta": {
+      "title": "FaceDetailer"
+    }
+  },
+  "112": {
+    "inputs": {
+      "seed": 467297257782175
+    },
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed Hand"
+    }
+  },
+  "114": {
+    "inputs": {
+      "images": [
+        "111",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "125": {
+    "inputs": {
+      "anything": [
+        "186",
+        0
+      ],
+      "anything2": [
+        "186",
+        1
+      ],
+      "anything3": [
+        "1",
+        2
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "126": {
+    "inputs": {
+      "lora_name": "base\\dmd2_sdxl_4step_lora.safetensors",
+      "strength_model": 1.0000000000000002,
+      "strength_clip": 1.0000000000000002,
+      "model": [
+        "1",
+        0
+      ],
+      "clip": [
+        "1",
+        1
+      ]
+    },
+    "class_type": "LoraLoader",
+    "_meta": {
+      "title": "Load LoRA (Model and CLIP)"
+    }
+  },
+  "129": {
+    "inputs": {
+      "model_name": "4xNMKDSuperscale_4xNMKDSuperscale.pt"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Load Upscale Model"
+    }
+  },
+  "130": {
+    "inputs": {
+      "anything": [
+        "129",
+        0
+      ]
+    },
+    "class_type": "Anything Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere"
+    }
+  },
+  "131": {
+    "inputs": {
+      "+ve": [
+        "79",
+        0
+      ],
+      "-ve": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "Prompts Everywhere",
+    "_meta": {
+      "title": "Anything Everywhere Prompts"
+    }
+  },
+  "137": {
+    "inputs": {
+      "seed": 48866547896414
+    },
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed Face"
+    }
+  },
+  "138": {
+    "inputs": {
+      "text": "bad quality, worst quality, low quality, ",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Face Negative Prompt"
+    }
+  },
+  "139": {
+    "inputs": {
+      "text": "young woman",
+      "clip": [
+        "186",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "Face Prompt"
+    }
+  },
+  "140": {
+    "inputs": {
+      "guide_size": 1152,
+      "guide_size_for": true,
+      "max_size": 1152,
+      "seed": [
+        "137",
+        0
+      ],
+      "steps": 1,
+      "cfg": 1,
+      "sampler_name": "lcm",
+      "scheduler": "sgm_uniform",
+      "denoise": 0.04,
+      "feather": 9,
+      "noise_mask": true,
+      "force_inpaint": true,
+      "bbox_threshold": 0.3500000000000001,
+      "bbox_dilation": 51,
+      "bbox_crop_factor": 1.5,
+      "sam_detection_hint": "center-1",
+      "sam_dilation": 45,
+      "sam_threshold": 0.5100000000000001,
+      "sam_bbox_expansion": 21,
+      "sam_mask_hint_threshold": 0.7000000000000002,
+      "sam_mask_hint_use_negative": "False",
+      "drop_size": 10,
+      "wildcard": "",
+      "cycle": [
+        "144",
+        0
+      ],
+      "inpaint_model": false,
+      "noise_mask_feather": 20,
+      "tiled_encode": false,
+      "tiled_decode": false,
+      "image": [
+        "7",
+        0
+      ],
+      "model": [
+        "186",
+        0
+      ],
+      "clip": [
+        "186",
+        1
+      ],
+      "vae": [
+        "1",
+        2
+      ],
+      "positive": [
+        "139",
+        0
+      ],
+      "negative": [
+        "138",
+        0
+      ],
+      "bbox_detector": [
+        "142",
+        0
+      ],
+      "sam_model_opt": [
+        "143",
+        0
+      ]
+    },
+    "class_type": "FaceDetailer",
+    "_meta": {
+      "title": "FaceDetailer"
+    }
+  },
+  "141": {
+    "inputs": {
+      "images": [
+        "140",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "142": {
+    "inputs": {
+      "model_name": "segm/face_yolov8m-seg_60.pt"
+    },
+    "class_type": "UltralyticsDetectorProvider",
+    "_meta": {
+      "title": "UltralyticsDetectorProvider"
+    }
+  },
+  "143": {
+    "inputs": {
+      "model_name": "sam_vit_b_01ec64.pth",
+      "device_mode": "AUTO"
+    },
+    "class_type": "SAMLoader",
+    "_meta": {
+      "title": "SAMLoader (Impact)"
+    }
+  },
+  "144": {
+    "inputs": {
+      "value": 2
+    },
+    "class_type": "PrimitiveInt",
+    "_meta": {
+      "title": "Number Of Passes"
+    }
+  },
+  "145": {
+    "inputs": {
+      "seed": -1
+    },
+    "class_type": "Seed (rgthree)",
+    "_meta": {
+      "title": "Seed"
+    }
+  },
+  "153": {
+    "inputs": {
+      "images": [
+        "111",
+        2
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "165": {
+    "inputs": {
+      "seed": [
+        "145",
+        0
+      ],
+      "steps": 30,
+      "cfg": 1,
+      "nag_scale": 5,
+      "nag_tau": 2.5,
+      "nag_alpha": 0.25,
+      "nag_sigma_end": 0,
+      "sampler_name": "lcm",
+      "scheduler": "beta",
+      "denoise": 1,
+      "positive": [
+        "79",
+        0
+      ],
+      "negative": [
+        "4",
+        0
+      ],
+      "nag_negative": [
+        "4",
+        0
+      ],
+      "latent_image": [
+        "6",
+        0
+      ],
+      "model": [
+        "186",
+        0
+      ]
+    },
+    "class_type": "KSamplerWithNAG",
+    "_meta": {
+      "title": "KSamplerWithNAG"
+    }
+  },
+  "185": {
+    "inputs": {
+      "input_mode": "simple",
+      "lora_count": 5,
+      "lora_name_1": "None",
+      "lora_wt_1": 0.4,
+      "model_str_1": 1,
+      "clip_str_1": 1,
+      "lora_name_2": "CUSTOM\\ela01.safetensors",
+      "lora_wt_2": 1,
+      "model_str_2": 1,
+      "clip_str_2": 1,
+      "lora_name_3": "None",
+      "lora_wt_3": 0.7,
+      "model_str_3": 1,
+      "clip_str_3": 1,
+      "lora_name_4": "None",
+      "lora_wt_4": 1,
+      "model_str_4": 1,
+      "clip_str_4": 1,
+      "lora_name_5": "None",
+      "lora_wt_5": 1,
+      "model_str_5": 1,
+      "clip_str_5": 1,
+      "lora_name_6": "None",
+      "lora_wt_6": 1,
+      "model_str_6": 1,
+      "clip_str_6": 1,
+      "lora_name_7": "None",
+      "lora_wt_7": 1,
+      "model_str_7": 1,
+      "clip_str_7": 1,
+      "lora_name_8": "None",
+      "lora_wt_8": 1,
+      "model_str_8": 1,
+      "clip_str_8": 1,
+      "lora_name_9": "None",
+      "lora_wt_9": 1,
+      "model_str_9": 1,
+      "clip_str_9": 1,
+      "lora_name_10": "None",
+      "lora_wt_10": 1,
+      "model_str_10": 1,
+      "clip_str_10": 1,
+      "lora_name_11": "None",
+      "lora_wt_11": 1,
+      "model_str_11": 1,
+      "clip_str_11": 1,
+      "lora_name_12": "None",
+      "lora_wt_12": 1,
+      "model_str_12": 1,
+      "clip_str_12": 1,
+      "lora_name_13": "None",
+      "lora_wt_13": 1,
+      "model_str_13": 1,
+      "clip_str_13": 1,
+      "lora_name_14": "None",
+      "lora_wt_14": 1,
+      "model_str_14": 1,
+      "clip_str_14": 1,
+      "lora_name_15": "None",
+      "lora_wt_15": 1,
+      "model_str_15": 1,
+      "clip_str_15": 1,
+      "lora_name_16": "None",
+      "lora_wt_16": 1,
+      "model_str_16": 1,
+      "clip_str_16": 1,
+      "lora_name_17": "None",
+      "lora_wt_17": 1,
+      "model_str_17": 1,
+      "clip_str_17": 1,
+      "lora_name_18": "None",
+      "lora_wt_18": 1,
+      "model_str_18": 1,
+      "clip_str_18": 1,
+      "lora_name_19": "None",
+      "lora_wt_19": 1,
+      "model_str_19": 1,
+      "clip_str_19": 1,
+      "lora_name_20": "None",
+      "lora_wt_20": 1,
+      "model_str_20": 1,
+      "clip_str_20": 1,
+      "lora_name_21": "None",
+      "lora_wt_21": 1,
+      "model_str_21": 1,
+      "clip_str_21": 1,
+      "lora_name_22": "None",
+      "lora_wt_22": 1,
+      "model_str_22": 1,
+      "clip_str_22": 1,
+      "lora_name_23": "None",
+      "lora_wt_23": 1,
+      "model_str_23": 1,
+      "clip_str_23": 1,
+      "lora_name_24": "None",
+      "lora_wt_24": 1,
+      "model_str_24": 1,
+      "clip_str_24": 1,
+      "lora_name_25": "None",
+      "lora_wt_25": 1,
+      "model_str_25": 1,
+      "clip_str_25": 1,
+      "lora_name_26": "None",
+      "lora_wt_26": 1,
+      "model_str_26": 1,
+      "clip_str_26": 1,
+      "lora_name_27": "None",
+      "lora_wt_27": 1,
+      "model_str_27": 1,
+      "clip_str_27": 1,
+      "lora_name_28": "None",
+      "lora_wt_28": 1,
+      "model_str_28": 1,
+      "clip_str_28": 1,
+      "lora_name_29": "None",
+      "lora_wt_29": 1,
+      "model_str_29": 1,
+      "clip_str_29": 1,
+      "lora_name_30": "None",
+      "lora_wt_30": 1,
+      "model_str_30": 1,
+      "clip_str_30": 1,
+      "lora_name_31": "None",
+      "lora_wt_31": 1,
+      "model_str_31": 1,
+      "clip_str_31": 1,
+      "lora_name_32": "None",
+      "lora_wt_32": 1,
+      "model_str_32": 1,
+      "clip_str_32": 1,
+      "lora_name_33": "None",
+      "lora_wt_33": 1,
+      "model_str_33": 1,
+      "clip_str_33": 1,
+      "lora_name_34": "None",
+      "lora_wt_34": 1,
+      "model_str_34": 1,
+      "clip_str_34": 1,
+      "lora_name_35": "None",
+      "lora_wt_35": 1,
+      "model_str_35": 1,
+      "clip_str_35": 1,
+      "lora_name_36": "None",
+      "lora_wt_36": 1,
+      "model_str_36": 1,
+      "clip_str_36": 1,
+      "lora_name_37": "None",
+      "lora_wt_37": 1,
+      "model_str_37": 1,
+      "clip_str_37": 1,
+      "lora_name_38": "None",
+      "lora_wt_38": 1,
+      "model_str_38": 1,
+      "clip_str_38": 1,
+      "lora_name_39": "None",
+      "lora_wt_39": 1,
+      "model_str_39": 1,
+      "clip_str_39": 1,
+      "lora_name_40": "None",
+      "lora_wt_40": 1,
+      "model_str_40": 1,
+      "clip_str_40": 1,
+      "lora_name_41": "None",
+      "lora_wt_41": 1,
+      "model_str_41": 1,
+      "clip_str_41": 1,
+      "lora_name_42": "None",
+      "lora_wt_42": 1,
+      "model_str_42": 1,
+      "clip_str_42": 1,
+      "lora_name_43": "None",
+      "lora_wt_43": 1,
+      "model_str_43": 1,
+      "clip_str_43": 1,
+      "lora_name_44": "None",
+      "lora_wt_44": 1,
+      "model_str_44": 1,
+      "clip_str_44": 1,
+      "lora_name_45": "None",
+      "lora_wt_45": 1,
+      "model_str_45": 1,
+      "clip_str_45": 1,
+      "lora_name_46": "None",
+      "lora_wt_46": 1,
+      "model_str_46": 1,
+      "clip_str_46": 1,
+      "lora_name_47": "None",
+      "lora_wt_47": 1,
+      "model_str_47": 1,
+      "clip_str_47": 1,
+      "lora_name_48": "None",
+      "lora_wt_48": 1,
+      "model_str_48": 1,
+      "clip_str_48": 1,
+      "lora_name_49": "None",
+      "lora_wt_49": 1,
+      "model_str_49": 1,
+      "clip_str_49": 1,
+      "lora_name_50": "None",
+      "lora_wt_50": 1,
+      "model_str_50": 1,
+      "clip_str_50": 1
+    },
+    "class_type": "LoRA Stacker",
+    "_meta": {
+      "title": "LoRA Stacker"
+    }
+  },
+  "200": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "111",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "186": {
+    "inputs": {
+      "model": [
+        "126",
+        0
+      ],
+      "clip": [
+        "126",
+        1
+      ],
+      "lora_stack": [
+        "185",
+        0
+      ]
+    },
+    "class_type": "CR Apply LoRA Stack",
+    "_meta": {
+      "title": "\ud83d\udc8a CR Apply LoRA Stack"
+    }
+  }
+}
