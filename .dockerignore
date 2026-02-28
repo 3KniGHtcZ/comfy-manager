@@ -9,3 +9,5 @@ dist
 src/**/__tests__
 src/test
 vitest.config.ts
+data/generations.json
+data/settings.json

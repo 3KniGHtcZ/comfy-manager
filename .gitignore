@@ -10,3 +10,5 @@ images/
 .playwright-mcp/
 .claude/
 *.png
+data/generations.json
+data/settings.json
