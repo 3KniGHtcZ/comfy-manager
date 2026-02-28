@@ -1,0 +1,15 @@
+services:
+  comfy-manager:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - COMFYUI_URL=${COMFYUI_URL:-http://192.168.1.100:8188}
+      - NODE_ENV=production
+    volumes:
+      - app-data:/app/data
+      - ./workflows:/app/workflows
+    restart: unless-stopped
+
+volumes:
+  app-data:
