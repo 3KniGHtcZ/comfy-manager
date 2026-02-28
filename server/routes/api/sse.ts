@@ -74,14 +74,19 @@ export default defineEventHandler(async (event) => {
       )
 
       // Executed events (node completed with output images)
+      // Filter to type === 'output' only: SaveImage writes to the output folder
+      // (type='output'), while PreviewImage writes to temp (type='temp').
+      // Without this filter, ela.json's 4 PreviewImage nodes produce 4 extra
+      // image_complete events per prompt, resulting in N×5 images instead of N×1.
       removeListeners.push(
         api.on('executed', (ev: CustomEvent<TExecuted>) => {
           const ed = ev.detail
           if (!promptId || ed.prompt_id === promptId) {
             const output = ed.output as { images?: Array<{ filename: string; subfolder: string; type: string }> }
-            if (output?.images && output.images.length > 0) {
+            const savedImages = output?.images?.filter((img) => img.type === 'output') ?? []
+            if (savedImages.length > 0) {
               push('image_complete', {
-                images: output.images,
+                images: savedImages,
                 promptId: ed.prompt_id,
                 node: ed.node,
               })
@@ -142,8 +147,10 @@ export default defineEventHandler(async (event) => {
           if (historyEntry?.status?.completed && !streamClosed) {
             for (const [node, nodeOutput] of Object.entries(historyEntry.outputs)) {
               const images = (nodeOutput as { images?: Array<{ filename: string; subfolder: string; type: string }> }).images
-              if (images && images.length > 0) {
-                push('image_complete', { images, promptId, node })
+              // Same filter as the real-time path: only emit saved output images
+              const savedImages = images?.filter((img) => img.type === 'output') ?? []
+              if (savedImages.length > 0) {
+                push('image_complete', { images: savedImages, promptId, node })
               }
             }
             push('done', { promptId })

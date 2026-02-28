@@ -49,18 +49,6 @@
       "title": "VAE Decode"
     }
   },
-  "8": {
-    "inputs": {
-      "images": [
-        "7",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
   "79": {
     "inputs": {
       "text": "RAW photo, candid selfie of Lexi and Klara in a dimly lit dorm room, Lexi is a 25-year-old brunette with chestnut hair and green eyes, athletic body, wearing a loose t-shirt falling off one shoulder, kneeling between the legs of Klara who is sitting on the edge of a bed, Klara is a petite blonde with a nipple piercing visible, wearing unbuttoned denim shorts, Klara's hand is gripping Lexi's hair, sexual tension, intimate atmosphere, soft warm lighting, high detail, photorealistic",
@@ -209,18 +197,6 @@
     "class_type": "Seed (rgthree)",
     "_meta": {
       "title": "Seed Hand"
-    }
-  },
-  "114": {
-    "inputs": {
-      "images": [
-        "111",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
     }
   },
   "125": {
@@ -408,18 +384,6 @@
       "title": "FaceDetailer"
     }
   },
-  "141": {
-    "inputs": {
-      "images": [
-        "140",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
   "142": {
     "inputs": {
       "model_name": "segm/face_yolov8m-seg_60.pt"
@@ -455,18 +419,6 @@
     "class_type": "Seed (rgthree)",
     "_meta": {
       "title": "Seed"
-    }
-  },
-  "153": {
-    "inputs": {
-      "images": [
-        "111",
-        2
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
     }
   },
   "165": {
