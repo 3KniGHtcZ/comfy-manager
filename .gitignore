@@ -1,0 +1,12 @@
+node_modules
+dist
+.output
+.vinxi
+.env
+*.log
+logs/
+images/
+.tanstack/
+.playwright-mcp/
+.claude/
+*.png
