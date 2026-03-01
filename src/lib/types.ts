@@ -23,6 +23,7 @@ export interface GenerationParams {
 
 export interface Generation {
   id: string
+  kind?: 'generation' | 'edit'
   personaId: string
   params: GenerationParams
   status: 'generating' | 'completed' | 'partial' | 'error'
@@ -39,8 +40,6 @@ export interface GeneratedImage {
 export interface EditParams {
   sourceImage: { filename: string; subfolder: string; type: string }
   prompt: string
-  aspectRatio: '1:1' | '16:9' | '9:16' | '4:3'
-  resolution: 512 | 768 | 1024
   steps: number
   cfg: number
   seedMode: 'random' | 'fixed'

@@ -6,6 +6,7 @@ interface HistoryCardProps {
   subtitle?: string
   thumbnailSrc?: string
   thumbnailAlt?: string
+  thumbnailOverlay?: React.ReactNode
   badges?: React.ReactNode
   onClick?: () => void
   className?: string
@@ -16,6 +17,7 @@ export function HistoryCard({
   subtitle,
   thumbnailSrc,
   thumbnailAlt,
+  thumbnailOverlay,
   badges,
   onClick,
   className,
@@ -30,7 +32,7 @@ export function HistoryCard({
         className
       )}
     >
-      <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#EDECEA]">
+      <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-[#EDECEA]">
         {thumbnailSrc ? (
           <img
             src={thumbnailSrc}
@@ -39,6 +41,11 @@ export function HistoryCard({
           />
         ) : (
           <div className="w-full h-full bg-[#EDECEA]" />
+        )}
+        {thumbnailOverlay && (
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center bg-black/50 py-[3px]">
+            {thumbnailOverlay}
+          </div>
         )}
       </div>
 

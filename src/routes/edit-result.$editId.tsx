@@ -169,7 +169,7 @@ function EditResultPage() {
           <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
           {edit.params && (
             <span className="text-[12px] text-text-muted">
-              {edit.params.aspectRatio} · {edit.params.resolution}px · {edit.params.steps} steps
+              {edit.params.steps} steps
             </span>
           )}
         </div>

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Pencil } from 'lucide-react'
 import { HeaderBack, Slider, ToggleSwitch, Stepper } from '~/components/ui'
-import { cn } from '~/lib/utils'
 import { getSettings } from '~/server/settings'
 import { getOutputImage } from '~/server/comfyui'
 import { useEditContext } from '~/contexts/EditContext'
@@ -17,9 +16,6 @@ export const Route = createFileRoute('/edit-setup')({
   component: EditSetupPage,
 })
 
-const aspectRatios: EditParams['aspectRatio'][] = ['1:1', '16:9', '9:16', '4:3']
-const resolutions: EditParams['resolution'][] = [512, 768, 1024]
-
 function EditSetupPage() {
   const { image, subfolder, type } = Route.useSearch()
   const navigate = useNavigate()
@@ -29,8 +25,6 @@ function EditSetupPage() {
   const [submitting, setSubmitting] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const [aspectRatio, setAspectRatio] = useState<EditParams['aspectRatio']>('1:1')
-  const [resolution, setResolution] = useState<EditParams['resolution']>(512)
   const [prompt, setPrompt] = useState('')
   const [steps, setSteps] = useState(10)
   const [cfg, setCfg] = useState(1)
@@ -75,8 +69,6 @@ function EditSetupPage() {
     const params: EditParams = {
       sourceImage: { filename: image, subfolder, type },
       prompt,
-      aspectRatio,
-      resolution,
       steps,
       seedMode,
       seed: seedMode === 'fixed' ? seed : undefined,
@@ -130,48 +122,6 @@ function EditSetupPage() {
           >
             Change
           </button>
-        </div>
-
-        {/* Aspect Ratio */}
-        <div className="flex flex-col gap-[10px]">
-          <p className="text-[14px] font-semibold text-text">Aspect Ratio</p>
-          <div className="flex gap-[10px]">
-            {aspectRatios.map((ar) => (
-              <button
-                key={ar}
-                onClick={() => setAspectRatio(ar)}
-                className={cn(
-                  'flex-1 h-10 rounded-xl text-[13px] transition-colors',
-                  aspectRatio === ar
-                    ? 'bg-primary font-semibold text-white'
-                    : 'bg-surface-muted font-medium text-text-secondary',
-                )}
-              >
-                {ar}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Resolution */}
-        <div className="flex flex-col gap-[10px]">
-          <p className="text-[14px] font-semibold text-text">Resolution</p>
-          <div className="flex gap-[10px]">
-            {resolutions.map((res) => (
-              <button
-                key={res}
-                onClick={() => setResolution(res)}
-                className={cn(
-                  'flex-1 h-10 rounded-xl text-[13px] transition-colors',
-                  resolution === res
-                    ? 'bg-primary font-semibold text-white'
-                    : 'bg-surface-muted font-medium text-text-secondary',
-                )}
-              >
-                {res}px
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Edit Prompt */}

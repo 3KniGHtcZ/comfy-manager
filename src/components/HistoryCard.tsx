@@ -3,6 +3,7 @@ import type { Generation } from '~/lib/types'
 import { getOutputImage } from '~/server/comfyui'
 import { HistoryCard as UIHistoryCard } from '~/components/ui/history-card'
 import { Badge } from '~/components/ui/badge'
+import { Sparkles, WandSparkles } from 'lucide-react'
 
 interface HistoryCardProps {
   generation: Generation
@@ -68,7 +69,16 @@ export function HistoryCard({
     }
   }, [images])
 
-  const subtitle = `${personaName} · ${images.length} image${images.length !== 1 ? 's' : ''} · ${getRelativeTime(generation.createdAt)}`
+  const subtitle = `${personaName || (generation.kind === 'edit' ? 'Edit' : '')} · ${images.length} image${images.length !== 1 ? 's' : ''} · ${getRelativeTime(generation.createdAt)}`
+
+  const isEdit = generation.kind === 'edit'
+
+  const thumbnailOverlay = (
+    <span className="flex items-center gap-1 text-[9px] font-medium text-white font-[Outfit]">
+      {isEdit ? <WandSparkles size={9} /> : <Sparkles size={9} />}
+      {isEdit ? 'Edit' : 'Generate'}
+    </span>
+  )
 
   const badges = (
     <>
@@ -83,6 +93,7 @@ export function HistoryCard({
       subtitle={subtitle}
       thumbnailSrc={thumbnailUrl ?? undefined}
       thumbnailAlt={title}
+      thumbnailOverlay={thumbnailOverlay}
       badges={badges}
       onClick={onClick}
     />

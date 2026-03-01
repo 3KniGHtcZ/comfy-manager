@@ -1,14 +1,43 @@
 import { createServerFn } from '@tanstack/react-start'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { Generation, GenerationParams, GeneratedImage } from '~/lib/types'
+import type { Generation, GenerationParams, GeneratedImage, EditRecord } from '~/lib/types'
 
 const DATA_PATH = join(process.cwd(), 'data', 'generations.json')
+const EDITS_PATH = join(process.cwd(), 'data', 'edits.json')
 
 async function readGenerations(): Promise<Generation[]> {
   try {
     const raw = await readFile(DATA_PATH, 'utf-8')
     return JSON.parse(raw)
+  } catch {
+    return []
+  }
+}
+
+async function readEditsAsGenerations(): Promise<Generation[]> {
+  try {
+    const raw = await readFile(EDITS_PATH, 'utf-8')
+    const edits: EditRecord[] = JSON.parse(raw)
+    return edits.map((edit) => ({
+      id: edit.id,
+      kind: 'edit' as const,
+      personaId: '',
+      params: {
+        personaId: '',
+        prompt: edit.params.prompt,
+        aspectRatio: '1:1',
+        resolution: 512,
+        steps: edit.params.steps,
+        cfg: edit.params.cfg,
+        seedMode: edit.params.seedMode,
+        seed: edit.params.seed,
+        batchCount: edit.params.batchCount,
+      },
+      status: edit.status === 'editing' ? 'generating' : (edit.status as Generation['status']),
+      images: edit.resultImages,
+      createdAt: edit.createdAt,
+    }))
   } catch {
     return []
   }
@@ -35,7 +64,8 @@ export const getGenerations = createServerFn({ method: 'GET' })
     const page = data.page ?? 1
     const limit = data.limit ?? 20
 
-    let items = await readGenerations()
+    const [generations, edits] = await Promise.all([readGenerations(), readEditsAsGenerations()])
+    let items = [...generations, ...edits]
 
     // Sort by createdAt descending (newest first)
     items.sort(

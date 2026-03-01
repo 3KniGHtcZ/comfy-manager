@@ -11,4 +11,5 @@ images/
 .claude/
 *.png
 data/generations.json
+data/edits.json
 data/settings.json

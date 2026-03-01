@@ -228,7 +228,7 @@ function EditingPage() {
           </p>
           {activeParams && (
             <p className="mt-1.5 text-[13px] text-white/70">
-              {activeParams.aspectRatio} · {activeParams.resolution}px · Steps {activeParams.steps}
+              Steps {activeParams.steps}
             </p>
           )}
         </div>

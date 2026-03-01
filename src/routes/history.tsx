@@ -198,10 +198,9 @@ function HistoryPage() {
                 generation={generation}
                 personaName={getPersonaName(generation.personaId)}
                 onClick={() =>
-                  navigate({
-                    to: '/results/$generationId',
-                    params: { generationId: generation.id },
-                  })
+                  generation.kind === 'edit'
+                    ? navigate({ to: '/edit-result/$editId', params: { editId: generation.id } })
+                    : navigate({ to: '/results/$generationId', params: { generationId: generation.id } })
                 }
               />
             ))}

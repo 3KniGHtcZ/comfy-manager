@@ -5,7 +5,6 @@ import type { EditParams, EditRecord } from '../../../src/lib/types'
 import {
   injectPrompt,
   injectSampler,
-  injectResolution,
   injectSourceImage,
 } from '../../../src/lib/workflow-utils'
 import { getComfyApi } from '../../../src/server/comfy-client'
@@ -67,9 +66,6 @@ export default defineEventHandler(async (event) => {
 
     // Inject sampler settings
     injectSampler(workflow, { steps: params.steps, cfg: params.cfg, seed })
-
-    // Inject resolution
-    injectResolution(workflow, params.aspectRatio, params.resolution)
 
     // Queue prompt to ComfyUI
     const result = await api.ext.queue.queuePrompt(null, workflow)

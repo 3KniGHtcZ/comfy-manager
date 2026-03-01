@@ -12,6 +12,7 @@ export const Route = createFileRoute('/')({
 
 interface RecentItem {
   generationId: string
+  kind?: 'generation' | 'edit'
   index: number
   image: GeneratedImage
   thumbnailUrl: string | null
@@ -28,7 +29,7 @@ function HomePage() {
         const items: RecentItem[] = []
         for (const gen of generationsResult.items) {
           for (let i = 0; i < gen.images.length; i++) {
-            items.push({ generationId: gen.id, index: i, image: gen.images[i], thumbnailUrl: null })
+            items.push({ generationId: gen.id, kind: gen.kind, index: i, image: gen.images[i], thumbnailUrl: null })
           }
         }
         const limited = items.slice(0, 8)
@@ -146,8 +147,8 @@ function HomePage() {
             {recentItems.map((item) => (
               <Link
                 key={`${item.generationId}-${item.index}`}
-                to="/image/$generationId/$index"
-                params={{ generationId: item.generationId, index: String(item.index) }}
+                to={item.kind === 'edit' ? '/edit-result/$editId' : '/image/$generationId/$index'}
+                params={item.kind === 'edit' ? { editId: item.generationId } : { generationId: item.generationId, index: String(item.index) }}
                 className="h-[120px] w-[120px] flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
               >
                 {item.thumbnailUrl ? (
