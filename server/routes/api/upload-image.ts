@@ -1,19 +1,6 @@
 import { defineEventHandler, readMultipartFormData } from 'h3'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
-import type { AppSettings } from '../../../src/lib/types'
 
-const SETTINGS_PATH = join(process.cwd(), 'data', 'settings.json')
-
-async function getServerUrl(): Promise<string> {
-  try {
-    const raw = await readFile(SETTINGS_PATH, 'utf-8')
-    const settings: AppSettings = JSON.parse(raw)
-    return settings.serverUrl
-  } catch {
-    return 'http://127.0.0.1:8188'
-  }
-}
+const SERVER_URL = process.env.COMFYUI_URL ?? 'http://127.0.0.1:8188'
 
 /**
  * POST /api/upload-image
@@ -32,8 +19,6 @@ export default defineEventHandler(async (event) => {
     throw new Error('No image field in upload')
   }
 
-  const serverUrl = await getServerUrl()
-
   // Build FormData to forward to ComfyUI
   const formData = new FormData()
   const blob = new Blob([filePart.data], {
@@ -41,7 +26,7 @@ export default defineEventHandler(async (event) => {
   })
   formData.append('image', blob, filePart.filename || 'upload.png')
 
-  const response = await fetch(`${serverUrl}/upload/image`, {
+  const response = await fetch(`${SERVER_URL}/upload/image`, {
     method: 'POST',
     body: formData,
   })
