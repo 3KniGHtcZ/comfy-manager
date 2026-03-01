@@ -1,6 +1,6 @@
 /**
  * Pure utility functions for manipulating ComfyUI API-format workflow objects.
- * All functions operate on a mutable workflow (Record<string, any>) in-place.
+ * All functions operate on a mutable workflow (ComfyWorkflow) in-place.
  *
  * Functions are generic: they trace node connections from the main sampler
  * rather than assuming fixed node IDs, so they work with both the default
@@ -8,12 +8,20 @@
  * (KSamplerWithNAG, SDXLEmptyLatentSizePicker+, separate Seed node, etc.).
  */
 
+type WorkflowNode = {
+	class_type?: string;
+	inputs?: Record<string, unknown>;
+	[key: string]: unknown;
+};
+
+export type ComfyWorkflow = Record<string, WorkflowNode>;
+
 const SAMPLER_CLASSES = new Set(["KSampler", "KSamplerWithNAG"]);
 
 /**
  * Find the node ID of the main sampler (KSampler or KSamplerWithNAG).
  */
-function findSamplerNodeId(workflow: Record<string, any>): string | undefined {
+function findSamplerNodeId(workflow: ComfyWorkflow): string | undefined {
 	return Object.keys(workflow).find((id) =>
 		SAMPLER_CLASSES.has(workflow[id]?.class_type),
 	);
@@ -31,9 +39,7 @@ function resolveLink(ref: unknown): string | undefined {
  * Find the node ID of the positive CLIPTextEncode by following the sampler's
  * `positive` link. Works regardless of which node ID the sampler is on.
  */
-function findPositivePromptNodeId(
-	workflow: Record<string, any>,
-): string | undefined {
+function findPositivePromptNodeId(workflow: ComfyWorkflow): string | undefined {
 	const samplerId = findSamplerNodeId(workflow);
 	if (!samplerId) return undefined;
 	return resolveLink(workflow[samplerId]?.inputs?.positive);
@@ -43,7 +49,7 @@ function findPositivePromptNodeId(
  * Find the node ID of the latent image node by following the sampler's
  * `latent_image` link.
  */
-function findLatentNodeId(workflow: Record<string, any>): string | undefined {
+function findLatentNodeId(workflow: ComfyWorkflow): string | undefined {
 	const samplerId = findSamplerNodeId(workflow);
 	if (!samplerId) return undefined;
 	return resolveLink(workflow[samplerId]?.inputs?.latent_image);
@@ -52,9 +58,7 @@ function findLatentNodeId(workflow: Record<string, any>): string | undefined {
 /**
  * Find the node ID of the CheckpointLoaderSimple.
  */
-function findCheckpointNodeId(
-	workflow: Record<string, any>,
-): string | undefined {
+function findCheckpointNodeId(workflow: ComfyWorkflow): string | undefined {
 	return Object.keys(workflow).find(
 		(id) => workflow[id]?.class_type === "CheckpointLoaderSimple",
 	);
@@ -65,9 +69,7 @@ const LOAD_IMAGE_CLASSES = new Set(["LoadImage"]);
 /**
  * Find the node ID of the LoadImage node.
  */
-function findLoadImageNodeId(
-	workflow: Record<string, any>,
-): string | undefined {
+function findLoadImageNodeId(workflow: ComfyWorkflow): string | undefined {
 	return Object.keys(workflow).find((id) =>
 		LOAD_IMAGE_CLASSES.has(workflow[id]?.class_type),
 	);
@@ -117,10 +119,7 @@ export function computeDimensions(
  *   a link to a PrimitiveStringMultiline node — follows the link and sets
  *   that upstream node's `value`.
  */
-export function injectPrompt(
-	workflow: Record<string, any>,
-	prompt: string,
-): void {
+export function injectPrompt(workflow: ComfyWorkflow, prompt: string): void {
 	const nodeId = findPositivePromptNodeId(workflow);
 	if (!nodeId || !workflow[nodeId]?.inputs) return;
 
@@ -154,7 +153,7 @@ export function injectPrompt(
  *   value is written into that upstream node's `inputs.seed`.
  */
 export function injectSampler(
-	workflow: Record<string, any>,
+	workflow: ComfyWorkflow,
 	params: { steps: number; cfg: number; seed: number },
 ): void {
 	const samplerId = findSamplerNodeId(workflow);
@@ -184,7 +183,7 @@ export function injectSampler(
  * unchanged so their built-in resolution picker stays intact.
  */
 export function injectResolution(
-	workflow: Record<string, any>,
+	workflow: ComfyWorkflow,
 	aspectRatio: string,
 	resolution: number,
 ): void {
@@ -204,7 +203,7 @@ export function injectResolution(
  * The new LoraLoader node is inserted as the next unused numeric key ≥ 200.
  */
 export function injectLoraModel(
-	workflow: Record<string, any>,
+	workflow: ComfyWorkflow,
 	loraName: string,
 	strength: number = 1.0,
 ): void {
@@ -254,7 +253,7 @@ export function injectLoraModel(
  * Used by the edit flow to set the input image for image-to-image workflows.
  */
 export function injectSourceImage(
-	workflow: Record<string, any>,
+	workflow: ComfyWorkflow,
 	filename: string,
 ): void {
 	const nodeId = findLoadImageNodeId(workflow);

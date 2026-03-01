@@ -6,7 +6,7 @@ import {
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { InstallBanner } from "~/components/InstallBanner";
 import { TabBar } from "~/components/TabBar";
 import { EditProvider } from "~/contexts/EditContext";

@@ -36,7 +36,7 @@ async function writeSettings(settings: AppSettings): Promise<void> {
  * Deep merge source into target. Only merges plain objects; arrays and
  * primitives from source overwrite target.
  */
-function deepMerge<T extends Record<string, any>>(
+function deepMerge<T extends Record<string, unknown>>(
 	target: T,
 	source: Partial<T>,
 ): T {
@@ -53,12 +53,12 @@ function deepMerge<T extends Record<string, any>>(
 			targetVal !== null &&
 			!Array.isArray(targetVal)
 		) {
-			(result as any)[key] = deepMerge(
-				targetVal as Record<string, any>,
-				sourceVal as Record<string, any>,
+			(result as Record<string, unknown>)[key as string] = deepMerge(
+				targetVal as Record<string, unknown>,
+				sourceVal as Record<string, unknown>,
 			);
 		} else if (sourceVal !== undefined) {
-			(result as any)[key] = sourceVal;
+			(result as Record<string, unknown>)[key as string] = sourceVal;
 		}
 	}
 	return result;

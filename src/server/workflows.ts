@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { createServerFn } from "@tanstack/react-start";
 import type { GenerationParams, Persona } from "~/lib/types";
 import {
+	type ComfyWorkflow,
 	injectLoraModel,
 	injectPrompt,
 	injectResolution,
@@ -26,7 +27,7 @@ export const buildPrompt = createServerFn({ method: "POST" })
 		// Load the workflow file — use persona's custom file or fall back to default
 		const workflowFile = persona.workflowFile ?? DEFAULT_WORKFLOW;
 		const raw = await readFile(join(WORKFLOWS_DIR, workflowFile), "utf-8");
-		const workflow: Record<string, any> = JSON.parse(raw);
+		const workflow: ComfyWorkflow = JSON.parse(raw);
 
 		// Remove metadata keys like _comment
 		delete workflow._comment;

@@ -24,9 +24,9 @@ function isMobile(): boolean {
 export function InstallBanner() {
 	const [platform, setPlatform] = useState<Platform>(null);
 	const [visible, setVisible] = useState(false);
-	const deferredPrompt = useRef<Event & { prompt: () => Promise<void> } | null>(
-		null,
-	);
+	const deferredPrompt = useRef<
+		(Event & { prompt: () => Promise<void> }) | null
+	>(null);
 
 	useEffect(() => {
 		if (!isMobile()) return;
