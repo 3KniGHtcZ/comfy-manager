@@ -8,11 +8,8 @@
  * (KSamplerWithNAG, SDXLEmptyLatentSizePicker+, separate Seed node, etc.).
  */
 
-type WorkflowNode = {
-	class_type?: string;
-	inputs?: Record<string, unknown>;
-	[key: string]: unknown;
-};
+// biome-ignore lint/suspicious/noExplicitAny: ComfyUI workflow nodes have a dynamic schema that varies per node type
+type WorkflowNode = Record<string, any>;
 
 export type ComfyWorkflow = Record<string, WorkflowNode>;
 
