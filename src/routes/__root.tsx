@@ -6,7 +6,8 @@ import {
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode } from "react";
+import { InstallBanner } from "~/components/InstallBanner";
 import { TabBar } from "~/components/TabBar";
 import { EditProvider } from "~/contexts/EditContext";
 import { GenerationProvider } from "~/contexts/GenerationContext";
@@ -43,12 +44,6 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
-	useEffect(() => {
-		if ("serviceWorker" in navigator) {
-			navigator.serviceWorker.register("/sw.js", { scope: "/" });
-		}
-	}, []);
-
 	return (
 		<RootDocument>
 			<GenerationProvider>
@@ -58,6 +53,7 @@ function RootComponent() {
 							<Outlet />
 						</main>
 						<TabBar />
+						<InstallBanner />
 					</div>
 				</EditProvider>
 			</GenerationProvider>
