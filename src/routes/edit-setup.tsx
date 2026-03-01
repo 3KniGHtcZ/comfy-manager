@@ -56,6 +56,8 @@ function EditSetupPage() {
 			} catch {
 				// Use defaults on error
 			}
+			const savedPrompt = localStorage.getItem("lastEditPrompt");
+			if (savedPrompt) setPrompt(savedPrompt);
 			setLoading(false);
 		}
 		load();
@@ -76,6 +78,7 @@ function EditSetupPage() {
 			batchCount,
 		};
 
+		localStorage.setItem("lastEditPrompt", prompt);
 		prepare(params);
 		navigate({ to: "/editing" });
 	};

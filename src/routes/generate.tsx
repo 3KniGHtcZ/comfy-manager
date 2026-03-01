@@ -63,6 +63,8 @@ function GenerateSetupPage() {
 			} catch {
 				// Use defaults on error
 			}
+			const savedPrompt = localStorage.getItem("lastGeneratePrompt");
+			if (savedPrompt) setPrompt(savedPrompt);
 			setLoading(false);
 		}
 		load();
@@ -85,6 +87,7 @@ function GenerateSetupPage() {
 			batchCount,
 		};
 
+		localStorage.setItem("lastGeneratePrompt", prompt);
 		prepare(params);
 		navigate({ to: "/generating" });
 	};
