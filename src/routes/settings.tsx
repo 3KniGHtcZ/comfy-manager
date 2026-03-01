@@ -10,7 +10,6 @@ export const Route = createFileRoute("/settings")({
 
 function SettingsPage() {
 	const [loading, setLoading] = useState(true);
-	const [serverUrl, setServerUrl] = useState("http://127.0.0.1:8188");
 	const [isOnline, setIsOnline] = useState(false);
 	const [isTesting, setIsTesting] = useState(false);
 	const [apiKey, setApiKey] = useState("");
@@ -27,7 +26,6 @@ function SettingsPage() {
 		async function load() {
 			try {
 				const settings: AppSettings = await getSettings();
-				setServerUrl(settings.serverUrl);
 				setApiKey(settings.apiKey || "");
 				setCfg(settings.defaults.cfg);
 				setDefaultSteps(settings.defaults.steps);
@@ -84,41 +82,6 @@ function SettingsPage() {
 					Server
 				</p>
 				<div className="rounded-2xl bg-white p-4 [box-shadow:0_2px_12px_#1A191808]">
-					{/* Server URL */}
-					<div className="flex items-center justify-between">
-						<span className="text-[14px] font-medium text-text">
-							Server URL
-						</span>
-						{editingField === "serverUrl" ? (
-							<input
-								type="url"
-								value={serverUrl}
-								onChange={(e) => setServerUrl(e.target.value)}
-								onBlur={() => {
-									saveSettings({ serverUrl });
-									setEditingField(null);
-								}}
-								onKeyDown={(e) => {
-									if (e.key === "Enter") {
-										saveSettings({ serverUrl });
-										setEditingField(null);
-									}
-								}}
-								className="min-w-0 flex-1 ml-4 rounded-lg border border-border bg-bg px-2 py-1 text-right text-[13px] text-text outline-none focus:ring-2 focus:ring-primary"
-							/>
-						) : (
-							<button
-								type="button"
-								onClick={() => setEditingField("serverUrl")}
-								className="text-[13px] text-[#3D8A5A]"
-							>
-								{serverUrl}
-							</button>
-						)}
-					</div>
-
-					<div className="my-[14px] h-px bg-[#E5E4E1]" />
-
 					{/* Status */}
 					<div className="flex items-center justify-between">
 						<span className="text-[14px] font-medium text-text">Status</span>

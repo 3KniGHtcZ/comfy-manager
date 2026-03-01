@@ -57,7 +57,6 @@ export interface EditRecord {
 }
 
 export interface AppSettings {
-	serverUrl: string;
 	apiKey?: string;
 	defaults: {
 		cfg: number;

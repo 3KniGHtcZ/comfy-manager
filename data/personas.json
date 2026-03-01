@@ -8,30 +8,6 @@
     "loraStrength": 1.0
   },
   {
-    "id": "rex",
-    "name": "Rex",
-    "description": "The explorer",
-    "avatar": "/images/rex.png",
-    "loraName": "",
-    "loraStrength": 1.0
-  },
-  {
-    "id": "aria",
-    "name": "Aria",
-    "description": "The artist",
-    "avatar": "/images/aria.png",
-    "loraName": "",
-    "loraStrength": 1.0
-  },
-  {
-    "id": "otto",
-    "name": "Otto",
-    "description": "The inventor",
-    "avatar": "/images/otto.png",
-    "loraName": "",
-    "loraStrength": 1.0
-  },
-  {
     "id": "ela",
     "name": "Ela",
     "description": "Realistic portrait",

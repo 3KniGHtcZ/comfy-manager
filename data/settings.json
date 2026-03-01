@@ -1,0 +1,7 @@
+{
+  "defaults": {
+    "cfg": 7.5,
+    "steps": 30,
+    "seedMode": "random"
+  }
+}
