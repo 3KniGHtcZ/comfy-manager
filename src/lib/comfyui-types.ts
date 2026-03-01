@@ -21,11 +21,11 @@ export interface ComfyUISystemStats {
 export interface ComfyUIPromptResponse {
 	prompt_id: string;
 	number: number;
-	node_errors: Record<string, unknown>;
+	node_errors: Record<string, object>;
 }
 
 export interface ComfyUIHistoryEntry {
-	prompt: [number, string, Record<string, unknown>, Record<string, unknown>];
+	prompt: [number, string, Record<string, object>, Record<string, object>];
 	outputs: Record<
 		string,
 		{

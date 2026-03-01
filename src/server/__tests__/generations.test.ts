@@ -33,7 +33,6 @@ import {
 const baseParams: GenerationParams = {
 	personaId: "persona-1",
 	prompt: "a cat in space",
-	negativePrompt: "blurry",
 	aspectRatio: "1:1",
 	resolution: 512,
 	steps: 20,
@@ -296,7 +295,7 @@ describe("updateGeneration", () => {
 		mockRead([gen]);
 
 		const result = await updateGeneration({
-			data: { id: "g1", updates: { status: "failed" } },
+			data: { id: "g1", updates: { status: "error" } },
 		});
 		expect(result.params).toEqual(gen.params);
 		expect(result.personaId).toBe(gen.personaId);

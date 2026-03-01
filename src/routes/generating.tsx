@@ -64,15 +64,16 @@ function GeneratingPage() {
 
 	useEffect(() => {
 		if (!currentImage) return;
+		const img = currentImage;
 		let cancelled = false;
 
 		async function loadPreview() {
 			try {
 				const result = await getOutputImage({
 					data: {
-						filename: currentImage?.filename,
-						subfolder: currentImage?.subfolder,
-						type: currentImage?.type,
+						filename: img.filename,
+						subfolder: img.subfolder,
+						type: img.type,
 					},
 				});
 				if (!cancelled) setPreviewUrl(result.dataUrl);

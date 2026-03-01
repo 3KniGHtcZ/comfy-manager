@@ -38,15 +38,16 @@ function EditResultPage() {
 	// Load source image
 	useEffect(() => {
 		if (!edit?.sourceImage) return;
+		const srcImg = edit.sourceImage;
 		let cancelled = false;
 
 		async function loadSource() {
 			try {
 				const result = await getOutputImage({
 					data: {
-						filename: edit?.sourceImage.filename,
-						subfolder: edit?.sourceImage.subfolder,
-						type: edit?.sourceImage.type,
+						filename: srcImg.filename,
+						subfolder: srcImg.subfolder,
+						type: srcImg.type,
 					},
 				});
 				if (!cancelled) setSourceUrl(result.dataUrl);
@@ -134,11 +135,11 @@ function EditResultPage() {
 	}
 
 	const statusBadge = {
-		completed: { label: "Edit completed", variant: "success" as const },
-		partial: { label: "Partially completed", variant: "warning" as const },
-		error: { label: "Error", variant: "error" as const },
-		editing: { label: "In progress", variant: "default" as const },
-	}[edit.status] || { label: edit.status, variant: "default" as const };
+		completed: { label: "Edit completed", variant: "green" as const },
+		partial: { label: "Partially completed", variant: "white" as const },
+		error: { label: "Error", variant: "white" as const },
+		editing: { label: "In progress", variant: "white" as const },
+	}[edit.status] ?? { label: edit.status, variant: "white" as const };
 
 	return (
 		<div className="flex flex-col min-h-screen">

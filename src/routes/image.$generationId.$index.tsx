@@ -116,7 +116,7 @@ function ImageDetailPage() {
 
 	const handleUseAsInput = useCallback(() => {
 		const personaId = generation?.params.personaId;
-		navigate({ to: "/generate", search: personaId ? { personaId } : {} });
+		navigate({ to: "/generate", search: { personaId: personaId ?? "" } });
 	}, [navigate, generation]);
 
 	const getRelativeTime = (dateString: string) => {

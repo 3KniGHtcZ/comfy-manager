@@ -66,15 +66,16 @@ function EditingPage() {
 	// Load source image preview
 	useEffect(() => {
 		if (!activeParams?.sourceImage) return;
+		const srcImg = activeParams.sourceImage;
 		let cancelled = false;
 
 		async function loadSource() {
 			try {
 				const result = await getOutputImage({
 					data: {
-						filename: activeParams?.sourceImage.filename,
-						subfolder: activeParams?.sourceImage.subfolder,
-						type: activeParams?.sourceImage.type,
+						filename: srcImg.filename,
+						subfolder: srcImg.subfolder,
+						type: srcImg.type,
 					},
 				});
 				if (!cancelled) setSourceUrl(result.dataUrl);
@@ -92,15 +93,16 @@ function EditingPage() {
 	// Load current generated image preview
 	useEffect(() => {
 		if (!currentImage) return;
+		const img = currentImage;
 		let cancelled = false;
 
 		async function loadPreview() {
 			try {
 				const result = await getOutputImage({
 					data: {
-						filename: currentImage?.filename,
-						subfolder: currentImage?.subfolder,
-						type: currentImage?.type,
+						filename: img.filename,
+						subfolder: img.subfolder,
+						type: img.type,
 					},
 				});
 				if (!cancelled) setPreviewUrl(result.dataUrl);
