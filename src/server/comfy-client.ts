@@ -9,6 +9,9 @@ let instance: ComfyApi | null = null;
 let currentUrl: string | null = null;
 
 async function getServerUrl(): Promise<string> {
+	if (process.env.COMFYUI_URL) {
+		return process.env.COMFYUI_URL;
+	}
 	try {
 		const raw = await readFile(SETTINGS_PATH, "utf-8");
 		const settings: AppSettings = JSON.parse(raw);
