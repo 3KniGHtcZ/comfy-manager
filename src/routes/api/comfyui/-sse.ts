@@ -10,4 +10,4 @@
 //
 // This file is intentionally excluded from the TanStack route tree
 // (it does not export a Route).
-export {}
+export {};
