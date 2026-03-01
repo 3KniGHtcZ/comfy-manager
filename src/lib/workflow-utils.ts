@@ -64,6 +64,19 @@ function findCheckpointNodeId(
   )
 }
 
+const LOAD_IMAGE_CLASSES = new Set(['LoadImage'])
+
+/**
+ * Find the node ID of the LoadImage node.
+ */
+function findLoadImageNodeId(
+  workflow: Record<string, any>,
+): string | undefined {
+  return Object.keys(workflow).find((id) =>
+    LOAD_IMAGE_CLASSES.has(workflow[id]?.class_type),
+  )
+}
+
 // ─── Public inject functions ───────────────────────────────────────────────
 
 /**
@@ -214,5 +227,19 @@ export function injectLoraModel(
   const negativeId = resolveLink(samplerNegRef)
   if (negativeId && workflow[negativeId]?.inputs) {
     workflow[negativeId].inputs.clip = [loraId, 1]
+  }
+}
+
+/**
+ * Inject a source image filename into the LoadImage node.
+ * Used by the edit flow to set the input image for image-to-image workflows.
+ */
+export function injectSourceImage(
+  workflow: Record<string, any>,
+  filename: string,
+): void {
+  const nodeId = findLoadImageNodeId(workflow)
+  if (nodeId && workflow[nodeId]?.inputs) {
+    workflow[nodeId].inputs.image = filename
   }
 }

@@ -16,10 +16,8 @@ export function HeaderBrand({ onBellClick, className }: HeaderBrandProps) {
       )}
     >
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg bg-[#3D8A5A] flex items-center justify-center shrink-0">
-          <div className="w-4 h-4 rounded-sm bg-white opacity-90" />
-        </div>
-        <span className="text-[17px] font-semibold text-[#1A1918] font-[Outfit]">
+        <div className="w-9 h-9 rounded-[10px] bg-[#3D8A5A] shrink-0" />
+        <span className="text-[22px] font-semibold tracking-[-0.3px] text-[#1A1918] font-[Outfit]">
           ComfyUI Studio
         </span>
       </div>

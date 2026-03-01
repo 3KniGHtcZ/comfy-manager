@@ -36,6 +36,27 @@ export interface GeneratedImage {
   type: string
 }
 
+export interface EditParams {
+  sourceImage: { filename: string; subfolder: string; type: string }
+  prompt: string
+  aspectRatio: '1:1' | '16:9' | '9:16' | '4:3'
+  resolution: 512 | 768 | 1024
+  steps: number
+  cfg: number
+  seedMode: 'random' | 'fixed'
+  seed?: number
+  batchCount: number
+}
+
+export interface EditRecord {
+  id: string
+  sourceImage: { filename: string; subfolder: string; type: string }
+  params: EditParams
+  status: 'editing' | 'completed' | 'partial' | 'error'
+  resultImages: GeneratedImage[]
+  createdAt: string
+}
+
 export interface AppSettings {
   serverUrl: string
   apiKey?: string

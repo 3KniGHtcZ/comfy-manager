@@ -42,7 +42,7 @@ export function HistoryCard({
         )}
       </div>
 
-      <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+      <div className="flex flex-col gap-1 flex-1 min-w-0">
         <span className="text-[14px] font-medium text-[#1A1918] font-[Outfit] leading-tight line-clamp-1">
           {title}
         </span>

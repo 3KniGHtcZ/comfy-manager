@@ -11,7 +11,7 @@ const tabs = [
 export function TabBar() {
   const { location } = useRouterState()
 
-  const hideOn = ['/generating', '/results/', '/image/', '/dev']
+  const hideOn = ['/generating', '/results/', '/image/', '/dev', '/edit']
   if (hideOn.some((path) => location.pathname.startsWith(path))) {
     return null
   }

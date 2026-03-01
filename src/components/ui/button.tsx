@@ -27,9 +27,9 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-transparent border border-[#D1D0CD]",
   ].join(" "),
   add: [
-    "h-12 rounded-xl justify-center gap-2",
+    "h-12 rounded-full justify-center gap-2",
     "text-[#6D6C6A] font-medium text-[14px] font-[Outfit]",
-    "bg-white border border-[#D1D0CD]",
+    "bg-white border-[1.5px] border-[#D1D0CD]",
   ].join(" "),
 }
 

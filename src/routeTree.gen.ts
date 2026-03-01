@@ -14,9 +14,13 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GeneratingRouteImport } from './routes/generating'
 import { Route as GenerateRouteImport } from './routes/generate'
 import { Route as FlowsRouteImport } from './routes/flows'
+import { Route as EditingRouteImport } from './routes/editing'
+import { Route as EditSetupRouteImport } from './routes/edit-setup'
+import { Route as EditRouteImport } from './routes/edit'
 import { Route as DevRouteImport } from './routes/dev'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResultsGenerationIdRouteImport } from './routes/results.$generationId'
+import { Route as EditResultEditIdRouteImport } from './routes/edit-result.$editId'
 import { Route as ImageGenerationIdIndexRouteImport } from './routes/image.$generationId.$index'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -44,6 +48,21 @@ const FlowsRoute = FlowsRouteImport.update({
   path: '/flows',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditingRoute = EditingRouteImport.update({
+  id: '/editing',
+  path: '/editing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditSetupRoute = EditSetupRouteImport.update({
+  id: '/edit-setup',
+  path: '/edit-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditRoute = EditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevRoute = DevRouteImport.update({
   id: '/dev',
   path: '/dev',
@@ -59,6 +78,11 @@ const ResultsGenerationIdRoute = ResultsGenerationIdRouteImport.update({
   path: '/results/$generationId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditResultEditIdRoute = EditResultEditIdRouteImport.update({
+  id: '/edit-result/$editId',
+  path: '/edit-result/$editId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ImageGenerationIdIndexRoute = ImageGenerationIdIndexRouteImport.update({
   id: '/image/$generationId/$index',
   path: '/image/$generationId/$index',
@@ -68,22 +92,30 @@ const ImageGenerationIdIndexRoute = ImageGenerationIdIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dev': typeof DevRoute
+  '/edit': typeof EditRoute
+  '/edit-setup': typeof EditSetupRoute
+  '/editing': typeof EditingRoute
   '/flows': typeof FlowsRoute
   '/generate': typeof GenerateRoute
   '/generating': typeof GeneratingRoute
   '/history': typeof HistoryRoute
   '/settings': typeof SettingsRoute
+  '/edit-result/$editId': typeof EditResultEditIdRoute
   '/results/$generationId': typeof ResultsGenerationIdRoute
   '/image/$generationId/$index': typeof ImageGenerationIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dev': typeof DevRoute
+  '/edit': typeof EditRoute
+  '/edit-setup': typeof EditSetupRoute
+  '/editing': typeof EditingRoute
   '/flows': typeof FlowsRoute
   '/generate': typeof GenerateRoute
   '/generating': typeof GeneratingRoute
   '/history': typeof HistoryRoute
   '/settings': typeof SettingsRoute
+  '/edit-result/$editId': typeof EditResultEditIdRoute
   '/results/$generationId': typeof ResultsGenerationIdRoute
   '/image/$generationId/$index': typeof ImageGenerationIdIndexRoute
 }
@@ -91,11 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dev': typeof DevRoute
+  '/edit': typeof EditRoute
+  '/edit-setup': typeof EditSetupRoute
+  '/editing': typeof EditingRoute
   '/flows': typeof FlowsRoute
   '/generate': typeof GenerateRoute
   '/generating': typeof GeneratingRoute
   '/history': typeof HistoryRoute
   '/settings': typeof SettingsRoute
+  '/edit-result/$editId': typeof EditResultEditIdRoute
   '/results/$generationId': typeof ResultsGenerationIdRoute
   '/image/$generationId/$index': typeof ImageGenerationIdIndexRoute
 }
@@ -104,33 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dev'
+    | '/edit'
+    | '/edit-setup'
+    | '/editing'
     | '/flows'
     | '/generate'
     | '/generating'
     | '/history'
     | '/settings'
+    | '/edit-result/$editId'
     | '/results/$generationId'
     | '/image/$generationId/$index'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dev'
+    | '/edit'
+    | '/edit-setup'
+    | '/editing'
     | '/flows'
     | '/generate'
     | '/generating'
     | '/history'
     | '/settings'
+    | '/edit-result/$editId'
     | '/results/$generationId'
     | '/image/$generationId/$index'
   id:
     | '__root__'
     | '/'
     | '/dev'
+    | '/edit'
+    | '/edit-setup'
+    | '/editing'
     | '/flows'
     | '/generate'
     | '/generating'
     | '/history'
     | '/settings'
+    | '/edit-result/$editId'
     | '/results/$generationId'
     | '/image/$generationId/$index'
   fileRoutesById: FileRoutesById
@@ -138,11 +186,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DevRoute: typeof DevRoute
+  EditRoute: typeof EditRoute
+  EditSetupRoute: typeof EditSetupRoute
+  EditingRoute: typeof EditingRoute
   FlowsRoute: typeof FlowsRoute
   GenerateRoute: typeof GenerateRoute
   GeneratingRoute: typeof GeneratingRoute
   HistoryRoute: typeof HistoryRoute
   SettingsRoute: typeof SettingsRoute
+  EditResultEditIdRoute: typeof EditResultEditIdRoute
   ResultsGenerationIdRoute: typeof ResultsGenerationIdRoute
   ImageGenerationIdIndexRoute: typeof ImageGenerationIdIndexRoute
 }
@@ -184,6 +236,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FlowsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/editing': {
+      id: '/editing'
+      path: '/editing'
+      fullPath: '/editing'
+      preLoaderRoute: typeof EditingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit-setup': {
+      id: '/edit-setup'
+      path: '/edit-setup'
+      fullPath: '/edit-setup'
+      preLoaderRoute: typeof EditSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/edit': {
+      id: '/edit'
+      path: '/edit'
+      fullPath: '/edit'
+      preLoaderRoute: typeof EditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dev': {
       id: '/dev'
       path: '/dev'
@@ -205,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsGenerationIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/edit-result/$editId': {
+      id: '/edit-result/$editId'
+      path: '/edit-result/$editId'
+      fullPath: '/edit-result/$editId'
+      preLoaderRoute: typeof EditResultEditIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/image/$generationId/$index': {
       id: '/image/$generationId/$index'
       path: '/image/$generationId/$index'
@@ -218,11 +298,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DevRoute: DevRoute,
+  EditRoute: EditRoute,
+  EditSetupRoute: EditSetupRoute,
+  EditingRoute: EditingRoute,
   FlowsRoute: FlowsRoute,
   GenerateRoute: GenerateRoute,
   GeneratingRoute: GeneratingRoute,
   HistoryRoute: HistoryRoute,
   SettingsRoute: SettingsRoute,
+  EditResultEditIdRoute: EditResultEditIdRoute,
   ResultsGenerationIdRoute: ResultsGenerationIdRoute,
   ImageGenerationIdIndexRoute: ImageGenerationIdIndexRoute,
 }

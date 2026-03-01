@@ -1,0 +1,262 @@
+import { useState, useEffect } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Pencil } from 'lucide-react'
+import { HeaderBack, Slider, ToggleSwitch, Stepper } from '~/components/ui'
+import { cn } from '~/lib/utils'
+import { getSettings } from '~/server/settings'
+import { getOutputImage } from '~/server/comfyui'
+import { useEditContext } from '~/contexts/EditContext'
+import type { EditParams } from '~/lib/types'
+
+export const Route = createFileRoute('/edit-setup')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    image: (search.image as string) || '',
+    subfolder: (search.subfolder as string) || '',
+    type: (search.type as string) || 'input',
+  }),
+  component: EditSetupPage,
+})
+
+const aspectRatios: EditParams['aspectRatio'][] = ['1:1', '16:9', '9:16', '4:3']
+const resolutions: EditParams['resolution'][] = [512, 768, 1024]
+
+function EditSetupPage() {
+  const { image, subfolder, type } = Route.useSearch()
+  const navigate = useNavigate()
+  const { prepare } = useEditContext()
+
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  const [aspectRatio, setAspectRatio] = useState<EditParams['aspectRatio']>('1:1')
+  const [resolution, setResolution] = useState<EditParams['resolution']>(512)
+  const [prompt, setPrompt] = useState('')
+  const [steps, setSteps] = useState(30)
+  const [cfg, setCfg] = useState(7.5)
+  const [seedMode, setSeedMode] = useState<'random' | 'fixed'>('random')
+  const [seed, setSeed] = useState(42)
+  const [batchCount, setBatchCount] = useState(1)
+
+  const maxPromptLength = 500
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [settings, imageResult] = await Promise.all([
+          getSettings(),
+          image
+            ? getOutputImage({
+                data: { filename: image, subfolder, type },
+              })
+            : null,
+        ])
+
+        setSteps(settings.defaults.steps)
+        setCfg(settings.defaults.cfg)
+        setSeedMode(settings.defaults.seedMode)
+
+        if (imageResult) {
+          setPreviewUrl(imageResult.dataUrl)
+        }
+      } catch {
+        // Use defaults on error
+      }
+      setLoading(false)
+    }
+    load()
+  }, [image, subfolder, type])
+
+  const handleEdit = () => {
+    if (!image || submitting) return
+
+    setSubmitting(true)
+
+    const params: EditParams = {
+      sourceImage: { filename: image, subfolder, type },
+      prompt,
+      aspectRatio,
+      resolution,
+      steps,
+      seedMode,
+      seed: seedMode === 'fixed' ? seed : undefined,
+      cfg,
+      batchCount,
+    }
+
+    prepare(params)
+    navigate({ to: '/editing' })
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <HeaderBack
+        title="Edit Setup"
+        onBackClick={() => navigate({ to: '/edit' })}
+        className="pt-14"
+      />
+
+      <div className="flex flex-col gap-5 px-6 pt-5 pb-[84px]">
+        {/* Source image preview */}
+        <div className="flex items-center gap-[14px]">
+          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl bg-surface-muted">
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt="Source image"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-surface-muted" />
+            )}
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <p className="text-[17px] font-semibold text-text truncate">
+              {image || 'No image selected'}
+            </p>
+            <p className="text-[13px] text-text-muted">Source image</p>
+          </div>
+          <button
+            onClick={() => navigate({ to: '/edit' })}
+            className="flex-shrink-0 rounded-full bg-surface-muted px-[14px] py-2 text-[12px] font-medium text-text-secondary"
+          >
+            Change
+          </button>
+        </div>
+
+        {/* Aspect Ratio */}
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-[14px] font-semibold text-text">Aspect Ratio</p>
+          <div className="flex gap-[10px]">
+            {aspectRatios.map((ar) => (
+              <button
+                key={ar}
+                onClick={() => setAspectRatio(ar)}
+                className={cn(
+                  'flex-1 h-10 rounded-xl text-[13px] transition-colors',
+                  aspectRatio === ar
+                    ? 'bg-primary font-semibold text-white'
+                    : 'bg-surface-muted font-medium text-text-secondary',
+                )}
+              >
+                {ar}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Resolution */}
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-[14px] font-semibold text-text">Resolution</p>
+          <div className="flex gap-[10px]">
+            {resolutions.map((res) => (
+              <button
+                key={res}
+                onClick={() => setResolution(res)}
+                className={cn(
+                  'flex-1 h-10 rounded-xl text-[13px] transition-colors',
+                  resolution === res
+                    ? 'bg-primary font-semibold text-white'
+                    : 'bg-surface-muted font-medium text-text-secondary',
+                )}
+              >
+                {res}px
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Edit Prompt */}
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-[14px] font-semibold text-text">Edit Prompt</p>
+          <textarea
+            value={prompt}
+            onChange={(e) => {
+              if (e.target.value.length <= maxPromptLength) {
+                setPrompt(e.target.value)
+              }
+            }}
+            placeholder="Describe the edit you want to make..."
+            rows={4}
+            className="w-full resize-none rounded-xl border border-[#D1D0CD] bg-white px-[14px] py-[14px] text-[13px] leading-[1.5] text-text-secondary placeholder-text-muted outline-none focus:border-primary"
+          />
+          <p className="text-[11px] text-text-muted">
+            Describe what changes to apply to the image
+          </p>
+        </div>
+
+        {/* Steps */}
+        <Slider
+          label="Steps"
+          value={steps}
+          onChange={setSteps}
+          min={1}
+          max={150}
+          step={1}
+        />
+
+        {/* CFG Scale */}
+        <Slider
+          label="CFG Scale"
+          value={cfg}
+          onChange={setCfg}
+          min={1}
+          max={20}
+          step={0.5}
+        />
+
+        {/* Seed Mode */}
+        <div className="flex flex-col gap-[10px]">
+          <p className="text-[14px] font-semibold text-text">Seed Mode</p>
+          <ToggleSwitch
+            options={[
+              { label: 'Random', value: 'random' },
+              { label: 'Fixed', value: 'fixed' },
+            ]}
+            value={seedMode}
+            onChange={(v) => setSeedMode(v as 'random' | 'fixed')}
+          />
+          {seedMode === 'fixed' && (
+            <input
+              type="number"
+              value={seed}
+              onChange={(e) => setSeed(parseInt(e.target.value, 10) || 0)}
+              placeholder="Seed value"
+              className="w-full rounded-xl border border-[#D1D0CD] bg-white px-[14px] py-3 text-[13px] text-text placeholder-text-muted outline-none focus:border-primary"
+            />
+          )}
+        </div>
+
+        {/* Batch Count */}
+        <div className="flex items-center justify-between">
+          <p className="text-[14px] font-semibold text-text">Batch Count</p>
+          <Stepper value={batchCount} onChange={setBatchCount} min={1} max={8} />
+        </div>
+
+        {/* Start Editing Button */}
+        <button
+          onClick={handleEdit}
+          disabled={!image || submitting}
+          className="flex h-[52px] w-full items-center justify-center gap-[10px] rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[17px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] disabled:opacity-50"
+        >
+          {submitting ? (
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          ) : (
+            <>
+              <Pencil size={20} />
+              Start Editing
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  )
+}

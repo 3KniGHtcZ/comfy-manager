@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-router'
 import { TabBar } from '~/components/TabBar'
 import { GenerationProvider } from '~/contexts/GenerationContext'
+import { EditProvider } from '~/contexts/EditContext'
 import appCss from '~/styles/app.css?url'
 
 export const Route = createRootRoute({
@@ -38,12 +39,14 @@ function RootComponent() {
   return (
     <RootDocument>
       <GenerationProvider>
-        <div className="flex min-h-dvh flex-col bg-bg">
-          <main className="flex-1 pb-20">
-            <Outlet />
-          </main>
-          <TabBar />
-        </div>
+        <EditProvider>
+          <div className="flex min-h-dvh flex-col bg-bg">
+            <main className="flex-1 pb-20">
+              <Outlet />
+            </main>
+            <TabBar />
+          </div>
+        </EditProvider>
       </GenerationProvider>
     </RootDocument>
   )

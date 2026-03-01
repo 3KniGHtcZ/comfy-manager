@@ -25,7 +25,7 @@ function SettingsRow({ label, value, onClick }: SettingsRowProps) {
         {label}
       </span>
       {value !== undefined && (
-        <span className="text-[14px] text-[#9C9B99] font-[Outfit]">
+        <span className="text-[13px] text-[#9C9B99] font-[Outfit]">
           {value}
         </span>
       )}

@@ -1,5 +1,6 @@
 import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { Sparkles, Wand2 } from "lucide-react"
 import {
   Button,
   Badge,
@@ -15,6 +16,11 @@ import {
   TabBar,
   HeaderBrand,
   HeaderBack,
+  FlowCard,
+  UploadZone,
+  ComparisonSlider,
+  RecentImageCard,
+  TextDivider,
 } from "~/components/ui"
 
 export const Route = createFileRoute("/dev")({
@@ -152,6 +158,59 @@ function DevPage() {
           <div className="bg-white rounded-xl overflow-hidden">
             <HeaderBack title="Generate" />
           </div>
+        </section>
+
+        {/* Flow Card */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[11px] font-semibold text-[#9C9B99] uppercase tracking-wider font-[Outfit]">Flow Card</h2>
+          <FlowCard
+            title="Text to Image"
+            description="Generate images from text prompts"
+            icon={Sparkles}
+          />
+          <FlowCard
+            title="Image to Image"
+            description="Transform existing images with AI"
+            icon={Wand2}
+            imageSrc="https://picsum.photos/seed/flow/400/200"
+          />
+        </section>
+
+        {/* Upload Zone */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[11px] font-semibold text-[#9C9B99] uppercase tracking-wider font-[Outfit]">Upload Zone</h2>
+          <UploadZone />
+        </section>
+
+        {/* Comparison Slider */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[11px] font-semibold text-[#9C9B99] uppercase tracking-wider font-[Outfit]">Comparison Slider</h2>
+          <ComparisonSlider
+            beforeSrc="https://picsum.photos/seed/before/400/300"
+            afterSrc="https://picsum.photos/seed/after/400/300"
+            className="h-[260px]"
+          />
+        </section>
+
+        {/* Recent Image Card */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[11px] font-semibold text-[#9C9B99] uppercase tracking-wider font-[Outfit]">Recent Image Card</h2>
+          <RecentImageCard
+            name="Sunset landscape"
+            info="2 min ago · 512×512"
+            thumbnailSrc="https://picsum.photos/seed/recent1/112/112"
+          />
+          <RecentImageCard
+            name="Portrait study"
+            info="15 min ago · 768×768"
+          />
+        </section>
+
+        {/* Text Divider */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[11px] font-semibold text-[#9C9B99] uppercase tracking-wider font-[Outfit]">Text Divider</h2>
+          <TextDivider />
+          <TextDivider label="or continue with" />
         </section>
 
       </div>
