@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import {
   Outlet,
   createRootRoute,
@@ -22,6 +22,10 @@ export const Route = createRootRoute({
       },
       { title: 'ComfyUI Studio' },
       { name: 'theme-color', content: '#FAF9F7' },
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+      { name: 'apple-mobile-web-app-title', content: 'ComfyUI Studio' },
+      { name: 'mobile-web-app-capable', content: 'yes' },
     ],
     links: [
       { rel: 'stylesheet', href: appCss, precedence: 'default' },
@@ -30,12 +34,20 @@ export const Route = createRootRoute({
         href: 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap',
         precedence: 'default',
       },
+      { rel: 'manifest', href: '/manifest.webmanifest' },
+      { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
     ],
   }),
   component: RootComponent,
 })
 
 function RootComponent() {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' })
+    }
+  }, [])
+
   return (
     <RootDocument>
       <GenerationProvider>
