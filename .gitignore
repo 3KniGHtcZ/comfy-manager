@@ -13,4 +13,3 @@ images/
 !public/**/*.png
 data/generations.json
 data/edits.json
-data/settings.json

@@ -2,12 +2,10 @@ import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createServerFn } from "@tanstack/react-start";
 import type { AppSettings } from "~/lib/types";
-import { resetComfyApi } from "~/server/comfy-client";
 
 const DATA_PATH = join(process.cwd(), "data", "settings.json");
 
 const DEFAULT_SETTINGS: AppSettings = {
-	serverUrl: process.env.COMFYUI_URL ?? "http://127.0.0.1:8188",
 	defaults: {
 		cfg: 7.5,
 		steps: 30,
@@ -18,11 +16,7 @@ const DEFAULT_SETTINGS: AppSettings = {
 async function readSettings(): Promise<AppSettings> {
 	try {
 		const raw = await readFile(DATA_PATH, "utf-8");
-		const settings: AppSettings = JSON.parse(raw);
-		if (process.env.COMFYUI_URL) {
-			settings.serverUrl = process.env.COMFYUI_URL;
-		}
-		return settings;
+		return JSON.parse(raw) as AppSettings;
 	} catch {
 		return { ...DEFAULT_SETTINGS };
 	}
@@ -83,8 +77,5 @@ export const updateSettings = createServerFn({ method: "POST" })
 		const current = await readSettings();
 		const merged = deepMerge(current, data);
 		await writeSettings(merged);
-		if (data.serverUrl && data.serverUrl !== current.serverUrl) {
-			resetComfyApi();
-		}
 		return merged;
 	});
