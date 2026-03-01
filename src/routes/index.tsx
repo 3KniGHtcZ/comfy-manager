@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import type { Persona, Generation, GeneratedImage } from '~/lib/types'
-import { Workflow, Bell, Plus } from 'lucide-react'
-import { CharacterCard, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '~/components/ui'
-import { PersonaForm } from '~/components/PersonaForm'
-import { getPersonas, createPersona } from '~/server/personas'
+import { Sparkles, WandSparkles } from 'lucide-react'
+import { HeaderBrand } from '~/components/ui'
+import type { GeneratedImage } from '~/lib/types'
 import { getGenerations } from '~/server/generations'
 import { getOutputImage } from '~/server/comfyui'
 
@@ -21,39 +19,24 @@ interface RecentItem {
 
 function HomePage() {
   const navigate = useNavigate()
-  const [personas, setPersonas] = useState<Persona[]>([])
   const [recentItems, setRecentItems] = useState<RecentItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
     async function load() {
       try {
-        const [personaList, generationsResult] = await Promise.all([
-          getPersonas(),
-          getGenerations({ data: { limit: 5 } }),
-        ])
-
-        setPersonas(personaList)
-
+        const generationsResult = await getGenerations({ data: { limit: 5 } })
         const items: RecentItem[] = []
         for (const gen of generationsResult.items) {
           for (let i = 0; i < gen.images.length; i++) {
-            items.push({
-              generationId: gen.id,
-              index: i,
-              image: gen.images[i],
-              thumbnailUrl: null,
-            })
+            items.push({ generationId: gen.id, index: i, image: gen.images[i], thumbnailUrl: null })
           }
         }
         const limited = items.slice(0, 8)
         setRecentItems(limited)
         loadThumbnails(limited)
       } catch {
-        // Use empty state on error
+        // Ignore
       }
-      setLoading(false)
     }
     load()
   }, [])
@@ -62,11 +45,7 @@ function HomePage() {
     for (const item of items) {
       try {
         const result = await getOutputImage({
-          data: {
-            filename: item.image.filename,
-            subfolder: item.image.subfolder,
-            type: item.image.type,
-          },
+          data: { filename: item.image.filename, subfolder: item.image.subfolder, type: item.image.type },
         })
         setRecentItems((prev) =>
           prev.map((ri) =>
@@ -76,80 +55,76 @@ function HomePage() {
           ),
         )
       } catch {
-        // Skip failed thumbnails
+        // Skip
       }
     }
   }
 
-  const handlePersonaClick = (persona: Persona) => {
-    navigate({ to: '/generate', search: { personaId: persona.id } })
-  }
-
-  const handleSavePersona = async (data: Omit<Persona, 'id'>) => {
-    try {
-      const newPersona = await createPersona({ data })
-      setPersonas((prev) => [...prev, newPersona])
-    } catch {
-      // Best effort
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    )
-  }
-
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 pt-14 pb-4">
-        <div className="flex items-center gap-[10px]">
-          <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-primary">
-            <Workflow size={20} color="white" strokeWidth={2} />
-          </div>
-          <span className="text-[22px] font-semibold tracking-[-0.3px] text-text">
-            ComfyUI Studio
-          </span>
-        </div>
-        <Bell size={22} className="text-text-muted" />
-      </header>
+      <HeaderBrand className="pt-14 px-6 pb-4" />
 
       {/* Greeting */}
-      <div className="flex flex-col gap-1 px-6 pt-6">
-        <h1 className="text-[26px] font-semibold tracking-[-0.5px] text-text">
-          Choose Character
+      <div className="flex flex-col gap-1 px-6 pt-5">
+        <h1 className="text-[24px] font-semibold tracking-[-0.5px] text-text leading-tight">
+          What do you want to create?
         </h1>
         <p className="text-[15px] text-text-secondary">
-          Select a character to generate in various scenes
+          Choose a workflow to get started
         </p>
       </div>
 
-      {/* Character grid */}
-      <div className="px-6 pt-2">
-        <div className="grid grid-cols-2 gap-[14px]">
-          {personas.map((persona) => (
-            <CharacterCard
-              key={persona.id}
-              name={persona.name}
-              description={persona.description}
-              imageSrc={persona.avatar}
-              onClick={() => handlePersonaClick(persona)}
-            />
-          ))}
-        </div>
-
-        {/* Add New Character */}
+      {/* Flow Cards */}
+      <div className="flex flex-col gap-[14px] px-6 pt-5">
+        {/* Generate Image */}
         <button
-          onClick={() => setShowForm(true)}
-          className="mt-[14px] flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#D1D0CD] bg-white transition-colors active:opacity-80"
+          type="button"
+          onClick={() => navigate({ to: '/generate', search: { personaId: '' } })}
+          className="relative h-[180px] w-full overflow-hidden rounded-[20px]"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1657627157258-da9474d4f078?w=600&q=80')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
-          <Plus size={18} className="text-[#6D6C6A]" />
-          <span className="text-[14px] font-medium text-[#6D6C6A]">
-            Add New Character
-          </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20" />
+          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
+            <div className="flex items-center gap-[10px]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-primary flex-shrink-0">
+                <Sparkles size={18} color="white" />
+              </div>
+              <span className="text-[20px] font-bold text-white">Generate Image</span>
+            </div>
+            <p className="text-[13px] text-white/80">
+              Create new images from a character and prompt using ComfyUI
+            </p>
+          </div>
+        </button>
+
+        {/* Edit Image */}
+        <button
+          type="button"
+          onClick={() => navigate({ to: '/edit' })}
+          className="relative h-[180px] w-full overflow-hidden rounded-[20px]"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1763833294742-c781be9803ac?w=600&q=80')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/20" />
+          <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
+            <div className="flex items-center gap-[10px]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-primary flex-shrink-0">
+                <WandSparkles size={18} color="white" />
+              </div>
+              <span className="text-[20px] font-bold text-white">Edit Image</span>
+            </div>
+            <p className="text-[13px] text-white/80">
+              Upload or pick an image and transform it with AI (qwen-edit)
+            </p>
+          </div>
         </button>
       </div>
 
@@ -160,53 +135,31 @@ function HomePage() {
             <h2 className="text-[18px] font-semibold tracking-[-0.2px] text-text">
               Recent Creations
             </h2>
-            <Link
-              to="/history"
-              className="text-[13px] font-medium text-primary"
-            >
+            <Link to="/history" className="text-[13px] font-medium text-primary">
               See all
             </Link>
           </div>
-          <Carousel opts={{ align: 'start', dragFree: true }}>
-            <CarouselContent className="gap-3">
-              {recentItems.map((item) => (
-                <CarouselItem
-                  key={`${item.generationId}-${item.index}`}
-                  className="basis-[120px]"
-                >
-                  <Link
-                    to="/image/$generationId/$index"
-                    params={{
-                      generationId: item.generationId,
-                      index: String(item.index),
-                    }}
-                    className="block h-[120px] w-[120px] overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
-                  >
-                    {item.thumbnailUrl ? (
-                      <img
-                        src={item.thumbnailUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-surface-muted" />
-                    )}
-                  </Link>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="bg-white text-text-secondary shadow-md backdrop-blur-none border-border" />
-            <CarouselNext className="bg-white text-text-secondary shadow-md backdrop-blur-none border-border" />
-          </Carousel>
+          <div
+            className="flex gap-3 overflow-x-auto"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            {recentItems.map((item) => (
+              <Link
+                key={`${item.generationId}-${item.index}`}
+                to="/image/$generationId/$index"
+                params={{ generationId: item.generationId, index: String(item.index) }}
+                className="h-[120px] w-[120px] flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
+              >
+                {item.thumbnailUrl ? (
+                  <img src={item.thumbnailUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full bg-surface-muted" />
+                )}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
-
-      {/* Persona Form Modal */}
-      <PersonaForm
-        open={showForm}
-        onClose={() => setShowForm(false)}
-        onSave={handleSavePersona}
-      />
     </div>
   )
 }
