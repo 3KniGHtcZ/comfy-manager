@@ -36,6 +36,7 @@ async function writeSettings(settings: AppSettings): Promise<void> {
  * Deep merge source into target. Only merges plain objects; arrays and
  * primitives from source overwrite target.
  */
+// biome-ignore lint/suspicious/noExplicitAny: deep merge requires runtime type erasure for generic object traversal
 function deepMerge<T extends Record<string, any>>(
 	target: T,
 	source: Partial<T>,
@@ -53,11 +54,13 @@ function deepMerge<T extends Record<string, any>>(
 			targetVal !== null &&
 			!Array.isArray(targetVal)
 		) {
+			// biome-ignore lint/suspicious/noExplicitAny: internal cast required for generic deep merge
 			(result as any)[key] = deepMerge(
 				targetVal as Record<string, any>,
 				sourceVal as Record<string, any>,
 			);
 		} else if (sourceVal !== undefined) {
+			// biome-ignore lint/suspicious/noExplicitAny: internal cast required for generic deep merge
 			(result as any)[key] = sourceVal;
 		}
 	}
