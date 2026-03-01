@@ -114,15 +114,38 @@ export function computeDimensions(
 
 /**
  * Inject a positive prompt by tracing the sampler's `positive` connection.
- * Works for any workflow layout.
+ *
+ * Handles multiple prompt node types:
+ * - CLIPTextEncode: sets `inputs.text` directly
+ * - TextEncodeQwenImageEditPlus (or similar): has `prompt` field which may be
+ *   a link to a PrimitiveStringMultiline node — follows the link and sets
+ *   that upstream node's `value`.
  */
 export function injectPrompt(
   workflow: Record<string, any>,
   prompt: string,
 ): void {
   const nodeId = findPositivePromptNodeId(workflow)
-  if (nodeId && workflow[nodeId]?.inputs) {
-    workflow[nodeId].inputs.text = prompt
+  if (!nodeId || !workflow[nodeId]?.inputs) return
+
+  const inputs = workflow[nodeId].inputs
+
+  // Standard CLIPTextEncode — has 'text' field
+  if ('text' in inputs) {
+    inputs.text = prompt
+    return
+  }
+
+  // TextEncodeQwenImageEditPlus or similar — has 'prompt' field
+  if ('prompt' in inputs) {
+    const upstreamId = resolveLink(inputs.prompt)
+    if (upstreamId && workflow[upstreamId]?.inputs) {
+      // PrimitiveStringMultiline: set 'value'
+      workflow[upstreamId].inputs.value = prompt
+    } else {
+      // Direct string value
+      inputs.prompt = prompt
+    }
   }
 }
 

@@ -32,8 +32,8 @@ function EditSetupPage() {
   const [aspectRatio, setAspectRatio] = useState<EditParams['aspectRatio']>('1:1')
   const [resolution, setResolution] = useState<EditParams['resolution']>(512)
   const [prompt, setPrompt] = useState('')
-  const [steps, setSteps] = useState(30)
-  const [cfg, setCfg] = useState(7.5)
+  const [steps, setSteps] = useState(10)
+  const [cfg, setCfg] = useState(1)
   const [seedMode, setSeedMode] = useState<'random' | 'fixed'>('random')
   const [seed, setSeed] = useState(42)
   const [batchCount, setBatchCount] = useState(1)
@@ -52,8 +52,8 @@ function EditSetupPage() {
             : null,
         ])
 
-        setSteps(settings.defaults.steps)
-        setCfg(settings.defaults.cfg)
+        // Only load seed mode from global settings — steps/cfg use
+        // workflow-specific defaults (qwen-edit: steps=10, cfg=1)
         setSeedMode(settings.defaults.seedMode)
 
         if (imageResult) {
