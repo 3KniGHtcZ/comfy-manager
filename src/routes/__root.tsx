@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
-import { useEffect, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import {
   Outlet,
   createRootRoute,
   HeadContent,
   Scripts,
 } from '@tanstack/react-router'
+import { InstallBanner } from '~/components/InstallBanner'
 import { TabBar } from '~/components/TabBar'
 import { GenerationProvider } from '~/contexts/GenerationContext'
 import { EditProvider } from '~/contexts/EditContext'
@@ -42,12 +43,6 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js', { scope: '/' })
-    }
-  }, [])
-
   return (
     <RootDocument>
       <GenerationProvider>
@@ -57,6 +52,7 @@ function RootComponent() {
               <Outlet />
             </main>
             <TabBar />
+            <InstallBanner />
           </div>
         </EditProvider>
       </GenerationProvider>
