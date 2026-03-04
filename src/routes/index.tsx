@@ -1,9 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Sparkles, WandSparkles } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HeaderBrand } from "~/components/ui";
+import { getImageUrl } from "~/lib/image-url";
 import type { GeneratedImage } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getGenerations } from "~/server/generations";
 
 export const Route = createFileRoute("/")({
@@ -15,35 +15,12 @@ interface RecentItem {
 	kind?: "generation" | "edit";
 	index: number;
 	image: GeneratedImage;
-	thumbnailUrl: string | null;
+	thumbnailUrl: string;
 }
 
 function HomePage() {
 	const navigate = useNavigate();
 	const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
-
-	const loadThumbnails = useCallback(async (items: RecentItem[]) => {
-		for (const item of items) {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: item.image.filename,
-						subfolder: item.image.subfolder,
-						type: item.image.type,
-					},
-				});
-				setRecentItems((prev) =>
-					prev.map((ri) =>
-						ri.generationId === item.generationId && ri.index === item.index
-							? { ...ri, thumbnailUrl: result.dataUrl }
-							: ri,
-					),
-				);
-			} catch {
-				// Skip
-			}
-		}
-	}, []);
 
 	useEffect(() => {
 		async function load() {
@@ -57,19 +34,17 @@ function HomePage() {
 							kind: gen.kind,
 							index: i,
 							image: gen.images[i],
-							thumbnailUrl: null,
+							thumbnailUrl: getImageUrl(gen.images[i]),
 						});
 					}
 				}
-				const limited = items.slice(0, 8);
-				setRecentItems(limited);
-				loadThumbnails(limited);
+				setRecentItems(items.slice(0, 8));
 			} catch {
 				// Ignore
 			}
 		}
 		load();
-	}, [loadThumbnails]);
+	}, []);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -181,15 +156,12 @@ function HomePage() {
 								}
 								className="h-[120px] w-[120px] flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted transition-transform active:scale-95"
 							>
-								{item.thumbnailUrl ? (
-									<img
-										src={item.thumbnailUrl}
-										alt=""
-										className="h-full w-full object-cover"
-									/>
-								) : (
-									<div className="h-full w-full bg-surface-muted" />
-								)}
+								<img
+									src={item.thumbnailUrl}
+									alt=""
+									className="h-full w-full object-cover"
+									loading="lazy"
+								/>
 							</Link>
 						))}
 					</div>

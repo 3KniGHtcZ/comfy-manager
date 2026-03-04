@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Timer, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useGenerationContext } from "~/contexts/GenerationContext";
-import { getOutputImage } from "~/server/comfyui";
+import { getImageUrl } from "~/lib/image-url";
 import { getPersona } from "~/server/personas";
 
 export const Route = createFileRoute("/generating")({
@@ -27,10 +27,10 @@ function GeneratingPage() {
 	} = useGenerationContext();
 
 	const [elapsedSeconds, setElapsedSeconds] = useState(0);
-	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 	const [personaName, setPersonaName] = useState<string | null>(null);
-	const [thumbnailUrls, setThumbnailUrls] = useState<string[]>([]);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+	const previewUrl = currentImage ? getImageUrl(currentImage) : null;
 
 	const executeCalledRef = useRef(false);
 	useEffect(() => {
@@ -62,60 +62,6 @@ function GeneratingPage() {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (!currentImage) return;
-		const img = currentImage;
-		let cancelled = false;
-
-		async function loadPreview() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				if (!cancelled) setPreviewUrl(result.dataUrl);
-			} catch {
-				// Skip failed preview
-			}
-		}
-
-		loadPreview();
-		return () => {
-			cancelled = true;
-		};
-	}, [currentImage]);
-
-	useEffect(() => {
-		let cancelled = false;
-
-		async function loadThumbnails() {
-			const urls: string[] = [];
-			for (const img of completedImages) {
-				try {
-					const result = await getOutputImage({
-						data: {
-							filename: img.filename,
-							subfolder: img.subfolder,
-							type: img.type,
-						},
-					});
-					if (cancelled) return;
-					urls.push(result.dataUrl);
-				} catch {
-					urls.push("");
-				}
-			}
-			if (!cancelled) setThumbnailUrls(urls);
-		}
-
-		if (completedImages.length > 0) loadThumbnails();
-		return () => {
-			cancelled = true;
-		};
-	}, [completedImages.length, completedImages]);
 
 	useEffect(() => {
 		if (status === "completed" && generationId) {
@@ -248,10 +194,10 @@ function GeneratingPage() {
 										: "bg-[#EDECEA] border border-[#D1D0CD]"
 								}`}
 							>
-								{isCompleted && thumbnailUrls[i] ? (
+								{isCompleted && completedImages[i] ? (
 									<>
 										<img
-											src={thumbnailUrls[i]}
+											src={getImageUrl(completedImages[i])}
 											alt={`Batch ${i + 1}`}
 											className="h-full w-full object-cover"
 										/>

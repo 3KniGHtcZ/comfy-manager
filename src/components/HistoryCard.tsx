@@ -1,9 +1,8 @@
 import { Sparkles, WandSparkles } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { HistoryCard as UIHistoryCard } from "~/components/ui/history-card";
+import { getImageUrl } from "~/lib/image-url";
 import type { Generation } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 
 interface HistoryCardProps {
 	generation: Generation;
@@ -32,40 +31,13 @@ export function HistoryCard({
 	personaName,
 	onClick,
 }: HistoryCardProps) {
-	const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
-
 	const prompt = generation.params?.prompt ?? "";
 	const images = generation.images ?? [];
 	const title =
 		prompt.length > 40 ? `${prompt.slice(0, 40)}...` : prompt || "Untitled";
 
-	useEffect(() => {
-		if (images.length === 0) return;
-		let cancelled = false;
-		const img = images[0];
-
-		async function loadThumb() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				if (!cancelled) {
-					setThumbnailUrl(result.dataUrl);
-				}
-			} catch {
-				// Leave as placeholder
-			}
-		}
-
-		loadThumb();
-		return () => {
-			cancelled = true;
-		};
-	}, [images]);
+	const thumbnailUrl =
+		images.length > 0 ? getImageUrl(images[0]) : undefined;
 
 	const subtitle = `${personaName || (generation.kind === "edit" ? "Edit" : "")} · ${images.length} image${images.length !== 1 ? "s" : ""} · ${getRelativeTime(generation.createdAt)}`;
 
@@ -91,7 +63,7 @@ export function HistoryCard({
 		<UIHistoryCard
 			title={title}
 			subtitle={subtitle}
-			thumbnailSrc={thumbnailUrl ?? undefined}
+			thumbnailSrc={thumbnailUrl}
 			thumbnailAlt={title}
 			thumbnailOverlay={thumbnailOverlay}
 			badges={badges}

@@ -78,30 +78,6 @@ export const getHistory = createServerFn({ method: "GET" })
 	});
 
 /**
- * Proxy an output image from ComfyUI. Returns the raw response so the
- * browser can render it directly.
- */
-export const getOutputImage = createServerFn({ method: "GET" })
-	.inputValidator(
-		(data: { filename: string; subfolder: string; type: string }) => data,
-	)
-	.handler(async ({ data }) => {
-		const api = await getComfyApi();
-		const blob = await api.ext.file.getImage({
-			filename: data.filename,
-			subfolder: data.subfolder,
-			type: data.type,
-		});
-		const buffer = Buffer.from(await blob.arrayBuffer());
-		const contentType = blob.type || "image/png";
-		const base64 = buffer.toString("base64");
-		return {
-			dataUrl: `data:${contentType};base64,${base64}`,
-			contentType,
-		};
-	});
-
-/**
  * Interrupt the currently running generation on ComfyUI.
  */
 export const interruptGeneration = createServerFn({ method: "POST" }).handler(
