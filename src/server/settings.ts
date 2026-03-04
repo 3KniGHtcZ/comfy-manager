@@ -50,7 +50,9 @@ function deepMerge<T extends Record<string, any>>(
 		) {
 			// biome-ignore lint/suspicious/noExplicitAny: internal cast required for generic deep merge
 			(result as any)[key] = deepMerge(
+				// biome-ignore lint/suspicious/noExplicitAny: internal cast required for generic deep merge
 				targetVal as Record<string, any>,
+				// biome-ignore lint/suspicious/noExplicitAny: internal cast required for generic deep merge
 				sourceVal as Record<string, any>,
 			);
 		} else if (sourceVal !== undefined) {

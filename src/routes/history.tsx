@@ -150,13 +150,15 @@ function HistoryPage() {
 								setDebouncedQuery("");
 							}
 						}}
-						className={"transition-colors " + searchButtonClass}
+						className={`transition-colors ${searchButtonClass}`}
 					>
 						<Search size={20} />
 					</button>
 				</header>
 
-				<div className={"overflow-hidden px-6 transition-all duration-300 " + searchBarClass}>
+				<div
+					className={`overflow-hidden px-6 transition-all duration-300 ${searchBarClass}`}
+				>
 					<input
 						ref={searchInputRef}
 						type="text"
