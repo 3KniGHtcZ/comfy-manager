@@ -1,11 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
+import { LoraSelector } from "~/components/LoraSelector";
 import { HeaderBack, Slider, Stepper, ToggleSwitch } from "~/components/ui";
 import { useEditContext } from "~/contexts/EditContext";
+import { type LoraDefinition, enrichWithColors } from "~/lib/edit-loras";
 import { getImageUrl } from "~/lib/image-url";
 import type { EditParams } from "~/lib/types";
 import { getSettings } from "~/server/settings";
+import { getEditLoras } from "~/server/workflows";
 
 export const Route = createFileRoute("/edit-setup")({
 	validateSearch: (search: Record<string, unknown>) => ({
@@ -30,6 +33,8 @@ function EditSetupPage() {
 	const [seedMode, setSeedMode] = useState<"random" | "fixed">("random");
 	const [seed, setSeed] = useState(42);
 	const [batchCount, setBatchCount] = useState(1);
+	const [loras, setLoras] = useState<LoraDefinition[]>([]);
+	const [activeLoraNodeIds, setActiveLoraNodeIds] = useState<string[]>([]);
 
 	const maxPromptLength = 500;
 
@@ -48,6 +53,19 @@ function EditSetupPage() {
 			} catch {
 				// Use defaults on error
 			}
+
+			try {
+				const infos = await getEditLoras();
+				const defs = enrichWithColors(infos);
+				setLoras(defs);
+				// Default: all LoRAs that have a positive defaultStrength start active
+				setActiveLoraNodeIds(
+					defs.filter((l) => l.defaultStrength > 0).map((l) => l.nodeId),
+				);
+			} catch {
+				// LoRA selector hidden if workflow can't be read
+			}
+
 			const savedPrompt = localStorage.getItem("lastEditPrompt");
 			if (savedPrompt) setPrompt(savedPrompt);
 			setLoading(false);
@@ -68,6 +86,7 @@ function EditSetupPage() {
 			seed: seedMode === "fixed" ? seed : undefined,
 			cfg,
 			batchCount,
+			activeLoraNodeIds,
 		};
 
 		localStorage.setItem("lastEditPrompt", prompt);
@@ -180,6 +199,13 @@ function EditSetupPage() {
 						/>
 					)}
 				</div>
+
+				{/* Style LoRA selector */}
+				<LoraSelector
+					loras={loras}
+					activeNodeIds={activeLoraNodeIds}
+					onChange={setActiveLoraNodeIds}
+				/>
 
 				{/* Batch Count */}
 				<div className="flex items-center justify-between">

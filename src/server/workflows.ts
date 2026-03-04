@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { createServerFn } from "@tanstack/react-start";
+import type { WorkflowLoraInfo } from "~/lib/edit-loras";
 import type { GenerationParams, Persona } from "~/lib/types";
 import {
 	type ComfyWorkflow,
@@ -11,7 +12,58 @@ import {
 } from "~/lib/workflow-utils";
 
 const DEFAULT_WORKFLOW = "image-generation.json";
+const EDIT_WORKFLOW = "qwen-edit.json";
 const WORKFLOWS_DIR = join(process.cwd(), "workflows");
+
+const LORA_CLASSES = new Set(["LoraLoader", "LoraLoaderModelOnly"]);
+
+/**
+ * Read the edit workflow and return all LoRA nodes with their real filenames,
+ * display labels (basename without extension), and default strength values.
+ */
+const LORA_CONFIG_PATH = join(process.cwd(), "data", "lora-config.json");
+
+type LoraConfigEntry = {
+	strength?: number;
+	name?: string;
+	image?: string;
+};
+
+export const getEditLoras = createServerFn({ method: "GET" }).handler(
+	async (): Promise<WorkflowLoraInfo[]> => {
+		const raw = await readFile(join(WORKFLOWS_DIR, EDIT_WORKFLOW), "utf-8");
+		// biome-ignore lint/suspicious/noExplicitAny: dynamic workflow schema
+		const workflow = JSON.parse(raw) as Record<string, any>;
+
+		// Load optional per-LoRA config (name, image, strength)
+		const configRaw = await readFile(LORA_CONFIG_PATH, "utf-8").catch(
+			() => "{}",
+		);
+		const loraConfig: Record<string, LoraConfigEntry> = JSON.parse(configRaw);
+
+		const result: WorkflowLoraInfo[] = [];
+		for (const [nodeId, node] of Object.entries(workflow)) {
+			if (!LORA_CLASSES.has(node?.class_type)) continue;
+			const loraName: string = node.inputs?.lora_name ?? "";
+			const defaultStrength: number = node.inputs?.strength_model ?? 1;
+			// Strip directory prefix and file extension for the fallback label
+			const basename =
+				loraName.replace(/\\/g, "/").split("/").pop() ?? loraName;
+			const label = basename.replace(/\.[^.]+$/, "");
+
+			const cfg = loraConfig[loraName];
+			result.push({
+				nodeId,
+				loraName,
+				label,
+				defaultStrength: cfg?.strength ?? defaultStrength,
+				name: cfg?.name || undefined,
+				image: cfg?.image || undefined,
+			});
+		}
+		return result;
+	},
+);
 
 /**
  * Build a fully-configured ComfyUI API-format workflow object from generation

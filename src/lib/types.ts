@@ -45,6 +45,8 @@ export interface EditParams {
 	seedMode: "random" | "fixed";
 	seed?: number;
 	batchCount: number;
+	/** Node IDs of LoRA nodes to keep active. Absent = don't touch workflow defaults. */
+	activeLoraNodeIds?: string[];
 }
 
 export interface EditRecord {

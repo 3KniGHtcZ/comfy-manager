@@ -245,6 +245,34 @@ export function injectLoraModel(
 	}
 }
 
+const LORA_CLASSES = new Set(["LoraLoader", "LoraLoaderModelOnly"]);
+
+/**
+ * Set strength_model (and strength_clip where present) on LoRA nodes.
+ *
+ * Active nodes (ID in `activeNodeIds`) receive their configured strength from
+ * `configuredStrengths` — falling back to 1 if not specified. All other LoRA
+ * nodes get strength 0. Only nodes with a class_type in LORA_CLASSES are affected.
+ */
+export function setLoraStrengths(
+	workflow: ComfyWorkflow,
+	activeNodeIds: string[],
+	configuredStrengths: Record<string, number> = {},
+): void {
+	const activeSet = new Set(activeNodeIds);
+	for (const [nodeId, node] of Object.entries(workflow)) {
+		if (!LORA_CLASSES.has(node?.class_type)) continue;
+		if (!node.inputs) continue;
+		const strength = activeSet.has(nodeId)
+			? (configuredStrengths[nodeId] ?? 1)
+			: 0;
+		node.inputs.strength_model = strength;
+		if ("strength_clip" in node.inputs) {
+			node.inputs.strength_clip = strength;
+		}
+	}
+}
+
 /**
  * Inject a source image filename into the LoadImage node.
  * Used by the edit flow to set the input image for image-to-image workflows.
