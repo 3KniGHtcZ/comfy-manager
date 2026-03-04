@@ -65,7 +65,6 @@ function EditingPage() {
 		};
 	}, []);
 
-
 	// Navigate to result on completion
 	useEffect(() => {
 		if (status === "completed" && editId) {

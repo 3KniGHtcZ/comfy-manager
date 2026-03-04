@@ -62,7 +62,6 @@ function GeneratingPage() {
 		};
 	}, []);
 
-
 	useEffect(() => {
 		if (status === "completed" && generationId) {
 			navigate({ to: "/results/$generationId", params: { generationId } });

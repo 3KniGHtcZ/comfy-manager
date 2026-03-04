@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, setResponseHeaders, createError } from 'h3'
+import { defineEventHandler, getQuery, createError } from 'h3'
 
 const COMFYUI_URL = process.env.COMFYUI_URL ?? 'http://127.0.0.1:8188'
 
@@ -29,11 +29,10 @@ export default defineEventHandler(async (event) => {
 
   const contentType = upstream.headers.get('content-type') ?? 'image/png'
 
-  setResponseHeaders(event, {
-    'Content-Type': contentType,
-    'Cache-Control': 'public, max-age=31536000, immutable',
+  return new Response(upstream.body, {
+    headers: {
+      'Content-Type': contentType,
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   })
-
-  const buffer = await upstream.arrayBuffer()
-  return Buffer.from(buffer)
 })
