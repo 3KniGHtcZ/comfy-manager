@@ -69,10 +69,10 @@ function SettingsPage() {
 	}
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col min-h-full">
 			{/* Header */}
-			<header className="flex items-center justify-center px-6 pt-14 pb-4">
-				<h1 className="text-[15px] font-semibold text-text">Settings</h1>
+			<header className="sticky top-0 z-10 bg-bg flex items-center justify-center px-5 pt-14 pb-3">
+				<h1 className="text-[14px] font-semibold text-text">Settings</h1>
 			</header>
 
 			{/* Content */}

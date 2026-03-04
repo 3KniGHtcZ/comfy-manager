@@ -119,17 +119,17 @@ function GeneratingPage() {
 	return (
 		<div className="flex min-h-dvh flex-col">
 			{/* Header */}
-			<header className="flex items-center justify-between px-6 pt-14 pb-4">
+			<header className="flex items-center justify-between px-5 pt-14 pb-3">
 				<button
 					type="button"
 					onClick={handleBack}
 					className="flex items-center gap-2"
 				>
 					<ChevronLeft size={20} className="text-text" strokeWidth={2} />
-					<span className="text-[15px] font-medium text-text">Back</span>
+					<span className="text-[14px] font-medium text-text">Back</span>
 				</button>
-				<h1 className="text-[15px] font-semibold text-text">Generating</h1>
-				<div className="w-[60px]" />
+				<h1 className="text-[14px] font-semibold text-text">Generating</h1>
+				<div className="w-[54px]" />
 			</header>
 
 			{/* Error banner */}

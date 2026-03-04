@@ -44,9 +44,9 @@ function HomePage() {
 	}, []);
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-full">
 			{/* Header */}
-			<HeaderBrand className="pt-14 px-6 pb-4" />
+			<HeaderBrand className="sticky top-0 z-10 bg-bg pt-14" />
 
 			{/* Greeting */}
 			<div className="flex flex-col gap-1 px-6 pt-5">

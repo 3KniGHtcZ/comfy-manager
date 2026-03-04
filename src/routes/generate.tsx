@@ -101,17 +101,17 @@ function GenerateSetupPage() {
 	}
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-full">
 			{/* Header */}
-			<header className="flex items-center justify-between px-6 pt-14 pb-4">
+			<header className="sticky top-0 z-10 bg-bg flex items-center justify-between px-5 pt-14 pb-3">
 				<Link to="/" className="flex items-center gap-2">
-					<ChevronLeft size={22} strokeWidth={2} className="text-text" />
-					<span className="text-[15px] font-medium text-text">Back</span>
+					<ChevronLeft size={20} strokeWidth={2} className="text-text" />
+					<span className="text-[14px] font-medium text-text">Back</span>
 				</Link>
-				<h1 className="text-[15px] font-semibold text-text">
+				<h1 className="text-[14px] font-semibold text-text">
 					Generation Setup
 				</h1>
-				<div className="w-[60px]" />
+				<div className="w-[54px]" />
 			</header>
 
 			{/* Scrollable content */}
