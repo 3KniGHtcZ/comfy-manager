@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     type?: string
   }
 
-  if (!filename || !subfolder || !type) {
+  if (filename == null || subfolder == null || !type) {
     throw createError({ statusCode: 400, statusMessage: 'Missing filename, subfolder, or type' })
   }
 
