@@ -7,7 +7,7 @@ import { ToggleSwitch } from "~/components/ui/toggle-switch";
 import { useGenerationContext } from "~/contexts/GenerationContext";
 import type { GenerationParams, Persona } from "~/lib/types";
 import { cn } from "~/lib/utils";
-import { getPersona } from "~/server/personas";
+import { getPersona, getPersonas } from "~/server/personas";
 import { getSettings } from "~/server/settings";
 
 export const Route = createFileRoute("/generate")({
@@ -24,6 +24,71 @@ const aspectRatios: GenerationParams["aspectRatio"][] = [
 	"4:3",
 ];
 const resolutions: GenerationParams["resolution"][] = [512, 768, 1024];
+
+function PersonaSelectionView() {
+	const navigate = useNavigate();
+	const [personas, setPersonas] = useState<Persona[]>([]);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		getPersonas().then((list) => {
+			setPersonas(list);
+			setLoading(false);
+		}).catch(() => setLoading(false));
+	}, []);
+
+	if (loading) {
+		return (
+			<div className="flex h-64 items-center justify-center">
+				<div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+			</div>
+		);
+	}
+
+	return (
+		<div className="flex flex-col min-h-full">
+			<header className="sticky top-0 z-10 bg-bg flex items-center justify-between px-5 pt-14 pb-3">
+				<Link to="/" className="flex items-center gap-2">
+					<ChevronLeft size={20} strokeWidth={2} className="text-text" />
+					<span className="text-[14px] font-medium text-text">Back</span>
+				</Link>
+				<h1 className="text-[14px] font-semibold text-text">Select Character</h1>
+				<div className="w-[54px]" />
+			</header>
+
+			<div className="flex flex-col gap-3 px-6 pt-5 pb-8">
+				{personas.length === 0 ? (
+					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+						<p className="text-[15px] font-semibold text-text">No characters yet</p>
+						<p className="text-[13px] text-text-muted">Create a character in Settings to get started.</p>
+					</div>
+				) : (
+					personas.map((p) => (
+						<button
+							key={p.id}
+							type="button"
+							onClick={() => navigate({ to: "/generate", search: { personaId: p.id } })}
+							className="flex items-center gap-[14px] rounded-2xl bg-white px-4 py-4 text-left [box-shadow:0_2px_12px_#1A191808] active:opacity-70 transition-opacity"
+						>
+							<div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted">
+								<img
+									src={p.avatar}
+									alt={p.name}
+									className="h-full w-full object-cover"
+									onError={(e) => { e.currentTarget.style.display = "none"; }}
+								/>
+							</div>
+							<div className="flex min-w-0 flex-1 flex-col gap-0.5">
+								<p className="text-[15px] font-semibold text-text">{p.name}</p>
+								<p className="truncate text-[13px] text-text-muted">{p.description}</p>
+							</div>
+						</button>
+					))
+				)}
+			</div>
+		</div>
+	);
+}
 
 function GenerateSetupPage() {
 	const { personaId } = Route.useSearch();
@@ -92,6 +157,10 @@ function GenerateSetupPage() {
 		navigate({ to: "/generating" });
 	};
 
+	if (!personaId) {
+		return <PersonaSelectionView />;
+	}
+
 	if (loading) {
 		return (
 			<div className="flex h-64 items-center justify-center">
@@ -104,7 +173,7 @@ function GenerateSetupPage() {
 		<div className="flex flex-col min-h-full">
 			{/* Header */}
 			<header className="sticky top-0 z-10 bg-bg flex items-center justify-between px-5 pt-14 pb-3">
-				<Link to="/" className="flex items-center gap-2">
+				<Link to="/generate" search={{ personaId: "" }} className="flex items-center gap-2">
 					<ChevronLeft size={20} strokeWidth={2} className="text-text" />
 					<span className="text-[14px] font-medium text-text">Back</span>
 				</Link>
@@ -139,7 +208,8 @@ function GenerateSetupPage() {
 						</p>
 					</div>
 					<Link
-						to="/"
+						to="/generate"
+						search={{ personaId: "" }}
 						className="flex-shrink-0 rounded-full bg-surface-muted px-[14px] py-2 text-[12px] font-medium text-text-secondary"
 					>
 						Change
