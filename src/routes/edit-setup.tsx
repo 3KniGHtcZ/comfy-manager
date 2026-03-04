@@ -53,7 +53,7 @@ function EditSetupPage() {
 			setLoading(false);
 		}
 		load();
-	}, [image, subfolder, type]);
+	}, []);
 
 	const handleEdit = () => {
 		if (!image || submitting) return;
