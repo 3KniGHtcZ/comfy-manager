@@ -17,7 +17,7 @@ export function TabBar() {
 	}
 
 	return (
-		<nav className="fixed bottom-0 left-0 right-0 z-50 bg-white [box-shadow:0_-2px_12px_#1A191808] safe-area-pb">
+		<nav className="bg-white [box-shadow:0_-2px_12px_#1A191808] safe-area-pb">
 			<div className="mx-auto flex max-w-lg items-center justify-around px-4 pt-3 pb-5">
 				{tabs.map((tab) => {
 					const isActive =

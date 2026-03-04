@@ -89,14 +89,14 @@ function ResultsGalleryPage() {
 	};
 
 	return (
-		<div className="flex min-h-dvh flex-col">
+		<div className="flex min-h-full flex-col">
 			{/* Header */}
-			<header className="flex items-center justify-between px-6 pt-14 pb-4">
+			<header className="sticky top-0 z-10 bg-bg flex items-center justify-between px-5 pt-14 pb-3">
 				<Link to="/" className="flex items-center gap-2">
 					<ChevronLeft size={20} className="text-text" strokeWidth={2} />
-					<span className="text-[15px] font-medium text-text">Back</span>
+					<span className="text-[14px] font-medium text-text">Back</span>
 				</Link>
-				<h1 className="text-[15px] font-semibold text-text">Results</h1>
+				<h1 className="text-[14px] font-semibold text-text">Results</h1>
 				<button
 					type="button"
 					onClick={handleDownloadAll}

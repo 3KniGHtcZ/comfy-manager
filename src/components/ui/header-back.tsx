@@ -11,7 +11,7 @@ export function HeaderBack({ title, onBackClick, className }: HeaderBackProps) {
 	return (
 		<div
 			className={cn(
-				"flex items-center justify-between w-full px-6 py-4",
+				"flex items-center justify-between w-full px-5 py-3",
 				className,
 			)}
 		>
@@ -20,19 +20,19 @@ export function HeaderBack({ title, onBackClick, className }: HeaderBackProps) {
 				onClick={onBackClick}
 				className="flex items-center gap-2 cursor-pointer"
 			>
-				<ChevronLeft size={22} color="#1A1918" strokeWidth={2} />
-				<span className="text-[15px] font-medium text-[#1A1918] font-[Outfit]">
+				<ChevronLeft size={20} color="#1A1918" strokeWidth={2} />
+				<span className="text-[14px] font-medium text-text font-[Outfit]">
 					Back
 				</span>
 			</button>
 
 			{title && (
-				<span className="text-[15px] font-semibold text-[#1A1918] font-[Outfit] absolute left-1/2 -translate-x-1/2">
+				<span className="text-[14px] font-semibold text-text font-[Outfit]">
 					{title}
 				</span>
 			)}
 
-			<div className="w-[60px]" />
+			<div className="w-[54px] h-[22px]" />
 		</div>
 	);
 }

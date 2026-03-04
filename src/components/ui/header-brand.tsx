@@ -10,23 +10,23 @@ export function HeaderBrand({ onBellClick, className }: HeaderBrandProps) {
 	return (
 		<div
 			className={cn(
-				"flex items-center justify-between w-full px-6 py-4",
+				"flex items-center justify-between w-full px-5 py-3",
 				className,
 			)}
 		>
 			<div className="flex items-center gap-2.5">
 				<svg
 					aria-hidden="true"
-					width="36"
-					height="36"
-					viewBox="0 0 36 36"
+					width="32"
+					height="32"
+					viewBox="0 0 32 32"
 					fill="none"
 					className="shrink-0"
 				>
 					<rect
-						width="36"
-						height="36"
-						rx="10"
+						width="32"
+						height="32"
+						rx="8"
 						fill="#F0F7F2"
 						stroke="#D1D0CD"
 						strokeWidth="1"
@@ -36,7 +36,7 @@ export function HeaderBrand({ onBellClick, className }: HeaderBrandProps) {
 					<circle cx="17.5" cy="23.5" r="5.5" fill="#C8F0D8" />
 					<circle cx="21.5" cy="10.5" r="3.5" fill="#2E6B45" />
 				</svg>
-				<span className="text-[22px] font-semibold tracking-[-0.3px] text-[#1A1918] font-[Outfit]">
+				<span className="text-[18px] font-semibold tracking-[-0.2px] text-text font-[Outfit]">
 					ComfyUI Studio
 				</span>
 			</div>
@@ -44,9 +44,9 @@ export function HeaderBrand({ onBellClick, className }: HeaderBrandProps) {
 			<button
 				type="button"
 				onClick={onBellClick}
-				className="w-9 h-9 flex items-center justify-center cursor-pointer"
+				className="flex items-center justify-center cursor-pointer"
 			>
-				<Bell size={22} color="#9C9B99" strokeWidth={1.75} />
+				<Bell size={20} color="#9C9B99" strokeWidth={1.75} />
 			</button>
 		</div>
 	);

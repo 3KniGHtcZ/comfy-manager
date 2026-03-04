@@ -98,11 +98,11 @@ function EditSelectPage() {
 	};
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-full">
 			<HeaderBack
 				title="Edit Image"
 				onBackClick={() => navigate({ to: "/" })}
-				className="pt-14"
+				className="sticky top-0 z-10 bg-bg pt-14"
 			/>
 
 			<div className="flex flex-col gap-5 px-6 pt-3 pb-8">

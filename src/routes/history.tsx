@@ -131,64 +131,61 @@ function HistoryPage() {
 		);
 	}
 
+	const searchBarClass = showSearch
+		? "mb-3 max-h-16 opacity-100"
+		: "max-h-0 opacity-0";
+	const searchButtonClass = showSearch ? "text-primary" : "text-text";
+
 	return (
-		<div className="flex flex-col">
-			{/* Header */}
-			<header className="flex items-center justify-between px-6 pt-14 pb-4">
-				<h1 className="text-[15px] font-semibold text-text">History</h1>
-				<button
-					type="button"
-					onClick={() => {
-						setShowSearch((prev) => !prev);
-						if (showSearch) {
-							setSearchQuery("");
-							setDebouncedQuery("");
-						}
-					}}
-					className={`transition-colors ${
-						showSearch ? "text-primary" : "text-text"
-					}`}
-				>
-					<Search size={20} />
-				</button>
-			</header>
-
-			{/* Search bar (animated) */}
-			<div
-				className={`overflow-hidden px-6 transition-all duration-300 ${
-					showSearch ? "mb-3 max-h-16 opacity-100" : "max-h-0 opacity-0"
-				}`}
-			>
-				<input
-					ref={searchInputRef}
-					type="text"
-					value={searchQuery}
-					onChange={(e) => setSearchQuery(e.target.value)}
-					placeholder="Search prompts..."
-					className="w-full rounded-xl bg-surface-muted px-4 py-3 text-sm text-text placeholder-text-muted outline-none focus:ring-2 focus:ring-primary"
-				/>
-			</div>
-
-			{/* Filter chips */}
-			<div className="flex gap-2 overflow-x-auto px-6 scrollbar-none">
-				<Chip
-					variant={activeFilter === "all" ? "active" : "inactive"}
-					onClick={() => setActiveFilter("all")}
-				>
-					All
-				</Chip>
-				{personaFilters.map((filter) => (
-					<Chip
-						key={filter.id}
-						variant={activeFilter === filter.id ? "active" : "inactive"}
-						onClick={() => setActiveFilter(filter.id)}
+		<div className="flex flex-col min-h-full">
+			<div className="sticky top-0 z-10 bg-bg">
+				<header className="flex items-center justify-between px-5 pt-14 pb-3">
+					<h1 className="text-[14px] font-semibold text-text">History</h1>
+					<button
+						type="button"
+						onClick={() => {
+							setShowSearch((prev) => !prev);
+							if (showSearch) {
+								setSearchQuery("");
+								setDebouncedQuery("");
+							}
+						}}
+						className={"transition-colors " + searchButtonClass}
 					>
-						{filter.name}
+						<Search size={20} />
+					</button>
+				</header>
+
+				<div className={"overflow-hidden px-6 transition-all duration-300 " + searchBarClass}>
+					<input
+						ref={searchInputRef}
+						type="text"
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
+						placeholder="Search prompts..."
+						className="w-full rounded-xl bg-surface-muted px-4 py-3 text-sm text-text placeholder-text-muted outline-none focus:ring-2 focus:ring-primary"
+					/>
+				</div>
+
+				<div className="flex gap-2 overflow-x-auto px-6 pb-3 scrollbar-none">
+					<Chip
+						variant={activeFilter === "all" ? "active" : "inactive"}
+						onClick={() => setActiveFilter("all")}
+					>
+						All
 					</Chip>
-				))}
+					{personaFilters.map((filter) => (
+						<Chip
+							key={filter.id}
+							variant={activeFilter === filter.id ? "active" : "inactive"}
+							onClick={() => setActiveFilter(filter.id)}
+						>
+							{filter.name}
+						</Chip>
+					))}
+				</div>
 			</div>
 
-			{/* History list */}
 			<div className="flex flex-col gap-[14px] px-6 pt-4 pb-5">
 				{history.length > 0 ? (
 					<>
@@ -210,7 +207,6 @@ function HistoryPage() {
 								}
 							/>
 						))}
-						{/* Sentinel for infinite scroll */}
 						<div ref={sentinelRef} />
 						{loadingMore && (
 							<div className="flex justify-center py-4">
