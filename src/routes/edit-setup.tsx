@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { LoraSelector } from "~/components/LoraSelector";
 import { HeaderBack, Slider, Stepper, ToggleSwitch } from "~/components/ui";
 import { useEditContext } from "~/contexts/EditContext";
-import { type LoraDefinition, enrichWithColors } from "~/lib/edit-loras";
+import { enrichWithColors, type LoraDefinition } from "~/lib/edit-loras";
 import { getImageUrl } from "~/lib/image-url";
 import type { EditParams } from "~/lib/types";
 import { getSettings } from "~/server/settings";

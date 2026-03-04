@@ -27,9 +27,7 @@ const LORA_PALETTE: [string, string][] = [
 ];
 
 /** Attach deterministic gradient colors to raw workflow LoRA info. */
-export function enrichWithColors(
-	infos: WorkflowLoraInfo[],
-): LoraDefinition[] {
+export function enrichWithColors(infos: WorkflowLoraInfo[]): LoraDefinition[] {
 	return infos.map((info, i) => ({
 		...info,
 		previewColors: LORA_PALETTE[i % LORA_PALETTE.length],

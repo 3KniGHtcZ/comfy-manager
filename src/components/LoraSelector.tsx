@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
-import { cn } from "~/lib/utils";
 import type { LoraDefinition } from "~/lib/edit-loras";
+import { cn } from "~/lib/utils";
 
 interface LoraSelectorProps {
 	loras: LoraDefinition[];
@@ -54,9 +54,7 @@ export function LoraSelector({
 							<div
 								className={cn(
 									"relative w-20 h-20 rounded-xl overflow-hidden transition-all",
-									selected
-										? "ring-[2.5px] ring-primary"
-										: "ring-1 ring-border",
+									selected ? "ring-[2.5px] ring-primary" : "ring-1 ring-border",
 								)}
 							>
 								{lora.image ? (
@@ -75,11 +73,7 @@ export function LoraSelector({
 								)}
 								{selected && (
 									<div className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
-										<Check
-											size={12}
-											className="text-white"
-											strokeWidth={3}
-										/>
+										<Check size={12} className="text-white" strokeWidth={3} />
 									</div>
 								)}
 							</div>
