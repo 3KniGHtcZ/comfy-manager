@@ -2,8 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Download, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ResultGrid } from "~/components/ResultGrid";
-import { getImageUrl } from "~/lib/image-url";
 import { downloadImage } from "~/lib/download";
+import { getImageUrl } from "~/lib/image-url";
 import type { Generation } from "~/lib/types";
 import { getGeneration } from "~/server/generations";
 

@@ -1,5 +1,5 @@
-import type { GeneratedImage } from "~/lib/types";
 import { getImageUrl } from "~/lib/image-url";
+import type { GeneratedImage } from "~/lib/types";
 
 interface ImageCardProps {
 	image: GeneratedImage;

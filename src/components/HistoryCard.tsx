@@ -36,8 +36,7 @@ export function HistoryCard({
 	const title =
 		prompt.length > 40 ? `${prompt.slice(0, 40)}...` : prompt || "Untitled";
 
-	const thumbnailUrl =
-		images.length > 0 ? getImageUrl(images[0]) : undefined;
+	const thumbnailUrl = images.length > 0 ? getImageUrl(images[0]) : undefined;
 
 	const subtitle = `${personaName || (generation.kind === "edit" ? "Edit" : "")} · ${images.length} image${images.length !== 1 ? "s" : ""} · ${getRelativeTime(generation.createdAt)}`;
 

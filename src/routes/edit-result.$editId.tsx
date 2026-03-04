@@ -34,9 +34,7 @@ function EditResultPage() {
 		load();
 	}, [editId]);
 
-	const sourceUrl = edit?.sourceImage
-		? getImageUrl(edit.sourceImage)
-		: null;
+	const sourceUrl = edit?.sourceImage ? getImageUrl(edit.sourceImage) : null;
 	const resultImg = edit?.resultImages?.[selectedIndex];
 	const resultUrl = resultImg ? getImageUrl(resultImg) : null;
 
