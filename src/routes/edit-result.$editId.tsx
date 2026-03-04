@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Download, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge, Button, ComparisonSlider, HeaderBack } from "~/components/ui";
+import { downloadImage } from "~/lib/download";
 import { getImageUrl } from "~/lib/image-url";
 import type { EditRecord } from "~/lib/types";
 import { getEdit } from "~/server/edits";
@@ -41,14 +42,7 @@ function EditResultPage() {
 
 	const handleDownload = async () => {
 		if (!resultUrl || !resultImg) return;
-		const res = await fetch(resultUrl);
-		const blob = await res.blob();
-		const blobUrl = URL.createObjectURL(blob);
-		const link = document.createElement("a");
-		link.href = blobUrl;
-		link.download = resultImg.filename || "edited-image.png";
-		link.click();
-		URL.revokeObjectURL(blobUrl);
+		await downloadImage(resultUrl, resultImg.filename || "edited-image.png");
 	};
 
 	const handleEditAgain = () => {

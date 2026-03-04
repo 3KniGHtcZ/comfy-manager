@@ -3,7 +3,6 @@ import { Sparkles, WandSparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { HeaderBrand } from "~/components/ui";
 import { getImageUrl } from "~/lib/image-url";
-import type { GeneratedImage } from "~/lib/types";
 import { getGenerations } from "~/server/generations";
 
 export const Route = createFileRoute("/")({
@@ -14,7 +13,6 @@ interface RecentItem {
 	generationId: string;
 	kind?: "generation" | "edit";
 	index: number;
-	image: GeneratedImage;
 	thumbnailUrl: string;
 }
 
@@ -33,7 +31,6 @@ function HomePage() {
 							generationId: gen.id,
 							kind: gen.kind,
 							index: i,
-							image: gen.images[i],
 							thumbnailUrl: getImageUrl(gen.images[i]),
 						});
 					}

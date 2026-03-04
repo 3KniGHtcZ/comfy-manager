@@ -10,23 +10,13 @@ import {
 	CarouselPrevious,
 } from "~/components/ui/carousel";
 import { getImageUrl } from "~/lib/image-url";
+import { downloadImage } from "~/lib/download";
 import type { Generation } from "~/lib/types";
 import { getGeneration } from "~/server/generations";
 
 export const Route = createFileRoute("/image/$generationId/$index")({
 	component: ImageDetailPage,
 });
-
-async function downloadImage(url: string, filename: string) {
-	const res = await fetch(url);
-	const blob = await res.blob();
-	const blobUrl = URL.createObjectURL(blob);
-	const a = document.createElement("a");
-	a.href = blobUrl;
-	a.download = filename;
-	a.click();
-	URL.revokeObjectURL(blobUrl);
-}
 
 function ImageDetailPage() {
 	const { generationId, index } = Route.useParams();
