@@ -1,0 +1,13 @@
+{
+  "_comment": "Configure each LoRA model. Key = full lora_name from the workflow. strength: active strength when toggled ON (0 is always used when OFF). name: user-friendly display name (optional, falls back to filename). image: URL or absolute path to a preview image shown on the card (optional, falls back to gradient).",
+  "QWEN\\Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors": {
+    "strength": 1.0,
+    "name": "Lightning steps",
+    "image": ""
+  },
+  "QWEN\\SEXGOD_FemaleNudity_QwenEdit_2511_v1_5.safetensors": {
+    "strength": 1.0,
+    "name": "Female Nudity",
+    "image": ""
+  }
+}

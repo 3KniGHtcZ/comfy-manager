@@ -6,12 +6,16 @@ import {
   injectPrompt,
   injectSampler,
   injectSourceImage,
+  setLoraStrengths,
 } from '../../../src/lib/workflow-utils'
 import { getComfyApi } from '../../../src/server/comfy-client'
 
 const EDITS_PATH = join(process.cwd(), 'data', 'edits.json')
+const LORA_CONFIG_PATH = join(process.cwd(), 'data', 'lora-config.json')
 const WORKFLOWS_DIR = join(process.cwd(), 'workflows')
 const DEFAULT_EDIT_WORKFLOW = 'qwen-edit.json'
+
+const LORA_CLASSES = new Set(['LoraLoader', 'LoraLoaderModelOnly'])
 
 /**
  * POST /api/edit
@@ -66,6 +70,25 @@ export default defineEventHandler(async (event) => {
 
     // Inject sampler settings
     injectSampler(workflow, { steps: params.steps, cfg: params.cfg, seed })
+
+    // Apply LoRA on/off state when the client sent a selection
+    if (params.activeLoraNodeIds !== undefined) {
+      // Read per-LoRA configured strengths from lora-config.json
+      const configRaw = await readFile(LORA_CONFIG_PATH, 'utf-8').catch(() => '{}')
+      const loraConfig: Record<string, { strength: number }> = JSON.parse(configRaw)
+
+      // Build nodeId → strength map by matching workflow lora_name to config keys
+      const configuredStrengths: Record<string, number> = {}
+      for (const [nodeId, node] of Object.entries(workflow)) {
+        if (!LORA_CLASSES.has(node?.class_type)) continue
+        const loraName: string = node.inputs?.lora_name ?? ''
+        if (loraConfig[loraName]?.strength !== undefined) {
+          configuredStrengths[nodeId] = loraConfig[loraName].strength
+        }
+      }
+
+      setLoraStrengths(workflow, params.activeLoraNodeIds, configuredStrengths)
+    }
 
     // Queue prompt to ComfyUI
     const result = await api.ext.queue.queuePrompt(null, workflow)
