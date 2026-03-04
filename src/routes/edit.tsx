@@ -6,8 +6,8 @@ import {
 	TextDivider,
 	UploadZone,
 } from "~/components/ui";
+import { getImageUrl } from "~/lib/image-url";
 import type { GeneratedImage } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getRecentImages } from "~/server/edits";
 
 export const Route = createFileRoute("/edit")({
@@ -24,9 +24,6 @@ function EditSelectPage() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const [recentImages, setRecentImages] = useState<RecentImage[]>([]);
-	const [thumbnailUrls, setThumbnailUrls] = useState<Record<string, string>>(
-		{},
-	);
 	const [uploading, setUploading] = useState(false);
 
 	useEffect(() => {
@@ -40,36 +37,6 @@ function EditSelectPage() {
 		}
 		load();
 	}, []);
-
-	// Load thumbnails for recent images
-	useEffect(() => {
-		let cancelled = false;
-
-		async function loadThumbnails() {
-			const urls: Record<string, string> = {};
-			for (const img of recentImages) {
-				try {
-					const result = await getOutputImage({
-						data: {
-							filename: img.filename,
-							subfolder: img.subfolder,
-							type: img.type,
-						},
-					});
-					if (cancelled) return;
-					urls[img.filename] = result.dataUrl;
-				} catch {
-					// Skip failed thumbnails
-				}
-			}
-			if (!cancelled) setThumbnailUrls(urls);
-		}
-
-		if (recentImages.length > 0) loadThumbnails();
-		return () => {
-			cancelled = true;
-		};
-	}, [recentImages]);
 
 	const handleUploadClick = () => {
 		fileInputRef.current?.click();
@@ -166,7 +133,7 @@ function EditSelectPage() {
 									key={`${img.generationId}-${img.filename}`}
 									name={img.filename}
 									info={formatDate(img.createdAt)}
-									thumbnailSrc={thumbnailUrls[img.filename]}
+									thumbnailSrc={getImageUrl(img)}
 									onClick={() => handleSelectRecent(img)}
 								/>
 							))}

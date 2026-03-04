@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Download, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge, Button, ComparisonSlider, HeaderBack } from "~/components/ui";
+import { getImageUrl } from "~/lib/image-url";
 import type { EditRecord } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getEdit } from "~/server/edits";
 
 export const Route = createFileRoute("/edit-result/$editId")({
@@ -16,8 +16,6 @@ function EditResultPage() {
 
 	const [edit, setEdit] = useState<EditRecord | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [sourceUrl, setSourceUrl] = useState<string | null>(null);
-	const [resultUrl, setResultUrl] = useState<string | null>(null);
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
 	useEffect(() => {
@@ -35,68 +33,22 @@ function EditResultPage() {
 		load();
 	}, [editId]);
 
-	// Load source image
-	useEffect(() => {
-		if (!edit?.sourceImage) return;
-		const srcImg = edit.sourceImage;
-		let cancelled = false;
+	const sourceUrl = edit?.sourceImage
+		? getImageUrl(edit.sourceImage)
+		: null;
+	const resultImg = edit?.resultImages?.[selectedIndex];
+	const resultUrl = resultImg ? getImageUrl(resultImg) : null;
 
-		async function loadSource() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: srcImg.filename,
-						subfolder: srcImg.subfolder,
-						type: srcImg.type,
-					},
-				});
-				if (!cancelled) setSourceUrl(result.dataUrl);
-			} catch {
-				// Skip
-			}
-		}
-
-		loadSource();
-		return () => {
-			cancelled = true;
-		};
-	}, [edit?.sourceImage.filename, edit?.sourceImage]);
-
-	// Load result image (selected index)
-	useEffect(() => {
-		if (!edit?.resultImages?.length) return;
-		const img = edit.resultImages[selectedIndex];
-		if (!img) return;
-		let cancelled = false;
-
-		async function loadResult() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				if (!cancelled) setResultUrl(result.dataUrl);
-			} catch {
-				// Skip
-			}
-		}
-
-		loadResult();
-		return () => {
-			cancelled = true;
-		};
-	}, [edit?.resultImages, selectedIndex]);
-
-	const handleDownload = () => {
-		if (!resultUrl) return;
+	const handleDownload = async () => {
+		if (!resultUrl || !resultImg) return;
+		const res = await fetch(resultUrl);
+		const blob = await res.blob();
+		const blobUrl = URL.createObjectURL(blob);
 		const link = document.createElement("a");
-		link.href = resultUrl;
-		link.download =
-			edit?.resultImages[selectedIndex]?.filename || "edited-image.png";
+		link.href = blobUrl;
+		link.download = resultImg.filename || "edited-image.png";
 		link.click();
+		URL.revokeObjectURL(blobUrl);
 	};
 
 	const handleEditAgain = () => {

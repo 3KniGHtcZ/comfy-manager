@@ -3,7 +3,7 @@ import { Timer, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HeaderBack } from "~/components/ui";
 import { useEditContext } from "~/contexts/EditContext";
-import { getOutputImage } from "~/server/comfyui";
+import { getImageUrl } from "~/lib/image-url";
 
 export const Route = createFileRoute("/editing")({
 	component: EditingPage,
@@ -27,10 +27,12 @@ function EditingPage() {
 	} = useEditContext();
 
 	const [elapsedSeconds, setElapsedSeconds] = useState(0);
-	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-	const [sourceUrl, setSourceUrl] = useState<string | null>(null);
-	const [thumbnailUrls, setThumbnailUrls] = useState<string[]>([]);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+	const previewUrl = currentImage ? getImageUrl(currentImage) : null;
+	const sourceUrl = activeParams?.sourceImage
+		? getImageUrl(activeParams.sourceImage)
+		: null;
 
 	// Execute on mount when preparing
 	const executeCalledRef = useRef(false);
@@ -63,89 +65,6 @@ function EditingPage() {
 		};
 	}, []);
 
-	// Load source image preview
-	useEffect(() => {
-		if (!activeParams?.sourceImage) return;
-		const srcImg = activeParams.sourceImage;
-		let cancelled = false;
-
-		async function loadSource() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: srcImg.filename,
-						subfolder: srcImg.subfolder,
-						type: srcImg.type,
-					},
-				});
-				if (!cancelled) setSourceUrl(result.dataUrl);
-			} catch {
-				// Skip
-			}
-		}
-
-		loadSource();
-		return () => {
-			cancelled = true;
-		};
-	}, [activeParams?.sourceImage.filename, activeParams?.sourceImage]);
-
-	// Load current generated image preview
-	useEffect(() => {
-		if (!currentImage) return;
-		const img = currentImage;
-		let cancelled = false;
-
-		async function loadPreview() {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				if (!cancelled) setPreviewUrl(result.dataUrl);
-			} catch {
-				// Skip
-			}
-		}
-
-		loadPreview();
-		return () => {
-			cancelled = true;
-		};
-	}, [currentImage]);
-
-	// Load batch thumbnails
-	useEffect(() => {
-		let cancelled = false;
-
-		async function loadThumbnails() {
-			const urls: string[] = [];
-			for (const img of completedImages) {
-				try {
-					const result = await getOutputImage({
-						data: {
-							filename: img.filename,
-							subfolder: img.subfolder,
-							type: img.type,
-						},
-					});
-					if (cancelled) return;
-					urls.push(result.dataUrl);
-				} catch {
-					urls.push("");
-				}
-			}
-			if (!cancelled) setThumbnailUrls(urls);
-		}
-
-		if (completedImages.length > 0) loadThumbnails();
-		return () => {
-			cancelled = true;
-		};
-	}, [completedImages.length, completedImages]);
 
 	// Navigate to result on completion
 	useEffect(() => {
@@ -267,10 +186,10 @@ function EditingPage() {
 											: "bg-[#EDECEA] border border-[#D1D0CD]"
 									}`}
 								>
-									{isCompleted && thumbnailUrls[i] ? (
+									{isCompleted && completedImages[i] ? (
 										<>
 											<img
-												src={thumbnailUrls[i]}
+												src={getImageUrl(completedImages[i])}
 												alt={`Preview ${i + 1}`}
 												className="h-full w-full object-cover"
 											/>

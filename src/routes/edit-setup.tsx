@@ -3,8 +3,8 @@ import { Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { HeaderBack, Slider, Stepper, ToggleSwitch } from "~/components/ui";
 import { useEditContext } from "~/contexts/EditContext";
+import { getImageUrl } from "~/lib/image-url";
 import type { EditParams } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getSettings } from "~/server/settings";
 
 export const Route = createFileRoute("/edit-setup")({
@@ -23,7 +23,6 @@ function EditSetupPage() {
 
 	const [loading, setLoading] = useState(true);
 	const [submitting, setSubmitting] = useState(false);
-	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
 	const [prompt, setPrompt] = useState("");
 	const [steps, setSteps] = useState(10);
@@ -34,25 +33,18 @@ function EditSetupPage() {
 
 	const maxPromptLength = 500;
 
+	const previewUrl = image
+		? getImageUrl({ filename: image, subfolder, type })
+		: null;
+
 	useEffect(() => {
 		async function load() {
 			try {
-				const [settings, imageResult] = await Promise.all([
-					getSettings(),
-					image
-						? getOutputImage({
-								data: { filename: image, subfolder, type },
-							})
-						: null,
-				]);
+				const settings = await getSettings();
 
 				// Only load seed mode from global settings — steps/cfg use
 				// workflow-specific defaults (qwen-edit: steps=10, cfg=1)
 				setSeedMode(settings.defaults.seedMode);
-
-				if (imageResult) {
-					setPreviewUrl(imageResult.dataUrl);
-				}
 			} catch {
 				// Use defaults on error
 			}

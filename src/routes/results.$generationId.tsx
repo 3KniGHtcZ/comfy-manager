@@ -2,15 +2,19 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Download, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ResultGrid } from "~/components/ResultGrid";
+import { getImageUrl } from "~/lib/image-url";
 import type { Generation } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getGeneration } from "~/server/generations";
 
-function downloadDataUrl(dataUrl: string, filename: string) {
+async function downloadImage(url: string, filename: string) {
+	const res = await fetch(url);
+	const blob = await res.blob();
+	const blobUrl = URL.createObjectURL(blob);
 	const a = document.createElement("a");
-	a.href = dataUrl;
+	a.href = blobUrl;
 	a.download = filename;
 	a.click();
+	URL.revokeObjectURL(blobUrl);
 }
 
 export const Route = createFileRoute("/results/$generationId")({
@@ -86,14 +90,7 @@ function ResultsGalleryPage() {
 		setIsDownloading(true);
 		for (const img of generation.images) {
 			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				downloadDataUrl(result.dataUrl, img.filename);
+				await downloadImage(getImageUrl(img), img.filename);
 			} catch {
 				// Skip failed images
 			}

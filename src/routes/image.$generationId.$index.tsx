@@ -9,19 +9,23 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "~/components/ui/carousel";
+import { getImageUrl } from "~/lib/image-url";
 import type { Generation } from "~/lib/types";
-import { getOutputImage } from "~/server/comfyui";
 import { getGeneration } from "~/server/generations";
 
 export const Route = createFileRoute("/image/$generationId/$index")({
 	component: ImageDetailPage,
 });
 
-function downloadDataUrl(dataUrl: string, filename: string) {
+async function downloadImage(url: string, filename: string) {
+	const res = await fetch(url);
+	const blob = await res.blob();
+	const blobUrl = URL.createObjectURL(blob);
 	const a = document.createElement("a");
-	a.href = dataUrl;
+	a.href = blobUrl;
 	a.download = filename;
 	a.click();
+	URL.revokeObjectURL(blobUrl);
 }
 
 function ImageDetailPage() {
@@ -31,7 +35,6 @@ function ImageDetailPage() {
 
 	const [generation, setGeneration] = useState<Generation | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [imageUrls, setImageUrls] = useState<(string | null)[]>([]);
 	const [showCopiedToast, setShowCopiedToast] = useState(false);
 	const [carouselApi, setCarouselApi] = useState<CarouselApi>();
 	const [currentIndex, setCurrentIndex] = useState(imageIndex);
@@ -48,29 +51,6 @@ function ImageDetailPage() {
 		}
 		load();
 	}, [generationId]);
-
-	useEffect(() => {
-		if (!generation) return;
-		setImageUrls(generation.images.map(() => null));
-		generation.images.forEach(async (img, i) => {
-			try {
-				const result = await getOutputImage({
-					data: {
-						filename: img.filename,
-						subfolder: img.subfolder,
-						type: img.type,
-					},
-				});
-				setImageUrls((prev) => {
-					const next = [...prev];
-					next[i] = result.dataUrl;
-					return next;
-				});
-			} catch {
-				// Leave as null placeholder
-			}
-		});
-	}, [generation]);
 
 	useEffect(() => {
 		if (!carouselApi) return;
@@ -94,12 +74,10 @@ function ImageDetailPage() {
 	}, [prompt]);
 
 	const handleDownload = useCallback(() => {
-		const url = imageUrls[currentIndex];
-		const filename =
-			generation?.images[currentIndex]?.filename ??
-			`image-${currentIndex + 1}.png`;
-		if (url) downloadDataUrl(url, filename);
-	}, [imageUrls, currentIndex, generation]);
+		const img = generation?.images[currentIndex];
+		if (!img) return;
+		downloadImage(getImageUrl(img), img.filename);
+	}, [currentIndex, generation]);
 
 	const handleShare = useCallback(() => {
 		if (navigator.share) {
@@ -189,19 +167,13 @@ function ImageDetailPage() {
 					className="h-[340px] w-full rounded-[20px] bg-surface-muted [box-shadow:0_2px_12px_#1A191808]"
 				>
 					<CarouselContent>
-						{generation.images.map((_, i) => (
+						{generation.images.map((img, i) => (
 							<CarouselItem key={i}>
-								{imageUrls[i] ? (
-									<img
-										src={imageUrls[i] ?? ""}
-										alt={`Generated ${i + 1}`}
-										className="h-full w-full object-cover"
-									/>
-								) : (
-									<div className="flex h-full w-full items-center justify-center bg-surface-muted">
-										<div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-									</div>
-								)}
+								<img
+									src={getImageUrl(img)}
+									alt={`Generated ${i + 1}`}
+									className="h-full w-full object-cover"
+								/>
 							</CarouselItem>
 						))}
 					</CarouselContent>
@@ -280,7 +252,7 @@ function ImageDetailPage() {
 					<button
 						type="button"
 						onClick={handleDownload}
-						disabled={!imageUrls[currentIndex]}
+						disabled={!generation?.images[currentIndex]}
 						className="flex flex-1 h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-b from-[#4D9B6A] to-[#3D8A5A] text-[15px] font-semibold text-white [box-shadow:0_4px_16px_#3D8A5A30] transition-opacity active:opacity-80 disabled:opacity-60"
 					>
 						<Download size={18} />
