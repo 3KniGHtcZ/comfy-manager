@@ -48,7 +48,7 @@ function RootComponent() {
 		<RootDocument>
 			<GenerationProvider>
 				<EditProvider>
-					<div className="flex h-dvh flex-col overflow-hidden bg-bg">
+					<div className="flex h-full flex-col overflow-hidden bg-bg">
 						<main className="flex-1 overflow-y-auto">
 							<Outlet />
 						</main>
