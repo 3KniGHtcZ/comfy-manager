@@ -48,8 +48,8 @@ function RootComponent() {
 		<RootDocument>
 			<GenerationProvider>
 				<EditProvider>
-					<div className="flex h-full flex-col overflow-hidden bg-bg">
-						<main className="flex-1 overflow-y-auto">
+					<div className="flex min-h-dvh flex-col bg-bg">
+						<main className="flex-1">
 							<Outlet />
 						</main>
 						<TabBar />
