@@ -4,43 +4,43 @@ export type { ButtonProps, ButtonVariant } from "./button";
 export { Button } from "./button";
 export type { CarouselApi } from "./carousel";
 export {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "./carousel";
-export type { CharacterCardProps } from "./character-card";
-export { CharacterCard } from "./character-card";
+export type { CharacterCardProps } from "./characterCard";
+export { CharacterCard } from "./characterCard";
 export type { ChipProps, ChipVariant } from "./chip";
 export { Chip } from "./chip";
-export type { ComparisonSliderProps } from "./comparison-slider";
-export { ComparisonSlider } from "./comparison-slider";
-export type { FlowCardProps } from "./flow-card";
-export { FlowCard } from "./flow-card";
-export type { HeaderBackProps } from "./header-back";
-export { HeaderBack } from "./header-back";
-export type { HeaderBrandProps } from "./header-brand";
-export { HeaderBrand } from "./header-brand";
-export type { HistoryCardProps } from "./history-card";
-export { HistoryCard } from "./history-card";
-export type { PromptInputProps } from "./prompt-input";
-export { PromptInput } from "./prompt-input";
-export type { RecentImageCardProps } from "./recent-image-card";
-export { RecentImageCard } from "./recent-image-card";
-export type { SegmentControlProps } from "./segment-control";
-export { SegmentControl } from "./segment-control";
-export type { SettingsCardProps, SettingsRowProps } from "./settings-card";
-export { SettingsCard } from "./settings-card";
+export type { ComparisonSliderProps } from "./comparisonSlider";
+export { ComparisonSlider } from "./comparisonSlider";
+export type { FlowCardProps } from "./flowCard";
+export { FlowCard } from "./flowCard";
+export type { HeaderBackProps } from "./headerBack";
+export { HeaderBack } from "./headerBack";
+export type { HeaderBrandProps } from "./headerBrand";
+export { HeaderBrand } from "./headerBrand";
+export type { HistoryCardProps } from "./historyCard";
+export { HistoryCard } from "./historyCard";
+export type { PromptInputProps } from "./promptInput";
+export { PromptInput } from "./promptInput";
+export type { RecentImageCardProps } from "./recentImageCard";
+export { RecentImageCard } from "./recentImageCard";
+export type { SegmentControlProps } from "./segmentControl";
+export { SegmentControl } from "./segmentControl";
+export type { SettingsCardProps, SettingsRowProps } from "./settingsCard";
+export { SettingsCard } from "./settingsCard";
 export type { SliderProps } from "./slider";
 export { Slider } from "./slider";
 export type { StepperProps } from "./stepper";
 export { Stepper } from "./stepper";
-export type { TabBarProps, TabId } from "./tab-bar";
-export { TabBar } from "./tab-bar";
-export type { TextDividerProps } from "./text-divider";
-export { TextDivider } from "./text-divider";
-export type { ToggleOption, ToggleSwitchProps } from "./toggle-switch";
-export { ToggleSwitch } from "./toggle-switch";
-export type { UploadZoneProps } from "./upload-zone";
-export { UploadZone } from "./upload-zone";
+export type { TabBarProps, TabId } from "./tabBar";
+export { TabBar } from "./tabBar";
+export type { TextDividerProps } from "./textDivider";
+export { TextDivider } from "./textDivider";
+export type { ToggleOption, ToggleSwitchProps } from "./toggleSwitch";
+export { ToggleSwitch } from "./toggleSwitch";
+export type { UploadZoneProps } from "./uploadZone";
+export { UploadZone } from "./uploadZone";

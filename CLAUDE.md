@@ -10,7 +10,7 @@ npm run build    # Production build (SSR, outputs to .output/)
 npm start        # Run production build (node .output/server/index.mjs)
 ```
 
-No test framework, linter, or formatter is configured.
+No test framework is configured. **Biome** is used for formatting and linting (`biome.json`).
 
 ## Architecture
 
@@ -57,12 +57,57 @@ JSON files in `data/` directory (`personas.json`, `generations.json`, `settings.
 
 ## Conventions
 
+### Formatting
+
+- **Indentation:** 2 spaces (no tabs) — enforced by Biome
+- **Quotes:** double quotes — enforced by Biome
+
+### Naming
+
+- **Files:** camelCase — `characterCard.tsx`, `useGeneration.ts`, `toggleSwitch.tsx`
+- **Components:** PascalCase — `CharacterCard`, `ToggleSwitch`
+- **Hooks:** camelCase with `use` prefix — `useGeneration`, `useSSE`
+- **Constants (module-level):** `UPPER_SNAKE_CASE` — `const MAX_RETRIES = 3`
+
+### Components
+
+- Export as `export const ComponentName: FC = () => ...` (not `export function`)
+- Props interface named `[ComponentName]Props`, exported via `export type { ComponentNameProps }`
+- Variant styles as a `Record` map, not inline ternaries:
+  ```ts
+  const variantStyles: Record<Variant, string> = { active: "...", inactive: "..." };
+  ```
+
+### TypeScript
+
+- Use `interface` for object shapes, `type` for unions and aliases
+- Never use `any` — use `unknown` or a proper type (enforced by Biome as error)
+- Use `import type` for type-only imports:
+  ```ts
+  import type { FC, ReactNode } from "react";
+  import type { GenerationParams } from "~/lib/types";
+  ```
+
+### Imports
+
+- **Order:** 1) external packages → 2) internal `~/` modules → 3) `import type` last
+- Always use `~/` alias — never relative paths (`../../components/...`)
+- Biome `organizeImports` is enabled and runs automatically
+
+### Styling
+
 - **Path alias:** `~/*` maps to `src/*`. Always use `~/` imports, not relative paths.
-- **Styling:** Tailwind v4 with `@theme` design tokens in `src/styles/app.css`. Use `cn()` from `~/lib/utils` for class merging.
+- **Tailwind v4** with `@theme` design tokens in `src/styles/app.css`
+- Always use `cn()` from `~/lib/utils` for `className` — never string concatenation
 - **Icons:** `lucide-react`
-- **UI components:** `src/components/ui/` with barrel export from `index.ts`. The app-level `TabBar` (`~/components/TabBar.tsx`) is separate from the UI library's `tab-bar.tsx`.
+- **UI components:** `src/components/ui/` with barrel export from `index.ts`. The app-level `TabBar` (`~/components/TabBar.tsx`) is separate from the UI library's `tabBar.tsx`.
 - **Radix primitives:** `@radix-ui/react-radio-group` (toggle-switch), `@radix-ui/react-slider` (slider)
 - **Font:** Outfit (Google Fonts, loaded in `__root.tsx`)
+
+### Hooks
+
+- Hook files live in `src/hooks/`
+- Wrap event handlers passed as props in `useCallback`
 
 ### Design Tokens
 
