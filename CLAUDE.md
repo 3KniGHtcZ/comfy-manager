@@ -8,7 +8,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev      # Dev server with HMR on http://localhost:3000
 npm run build    # Production build (SSR, outputs to .output/)
 npm start        # Run production build (node .output/server/index.mjs)
+npm run lint     # Biome lint check (src/ only)
+npm run test     # Run tests (vitest)
+npm run ci       # Full pipeline check: lint + tsc + test + build — run before every push
 ```
+
+> **Before every `git push`** run `npm run ci` to catch lint, type, test and build errors locally before they fail in CI.
 
 No test framework is configured. **Biome** is used for formatting and linting (`biome.json`).
 
