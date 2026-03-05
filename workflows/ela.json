@@ -11,10 +11,7 @@
   "4": {
     "inputs": {
       "text": "deformed, blurry, bad anatomy, disfigured, poorly drawn face, mutation, mutated, extra limb, ugly, poorly drawn hands, missing limb, disconnected limbs, malformed hands, extra fingers, (worst quality, low quality, normal quality:1.4), jpeg artifacts, signature, watermark, username, censorship, censored",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -35,14 +32,8 @@
   },
   "7": {
     "inputs": {
-      "samples": [
-        "165",
-        0
-      ],
-      "vae": [
-        "1",
-        2
-      ]
+      "samples": ["165", 0],
+      "vae": ["1", 2]
     },
     "class_type": "VAEDecode",
     "_meta": {
@@ -52,10 +43,7 @@
   "79": {
     "inputs": {
       "text": "RAW photo, candid selfie of Lexi and Klara in a dimly lit dorm room, Lexi is a 25-year-old brunette with chestnut hair and green eyes, athletic body, wearing a loose t-shirt falling off one shoulder, kneeling between the legs of Klara who is sitting on the edge of a bed, Klara is a petite blonde with a nipple piercing visible, wearing unbuttoned denim shorts, Klara's hand is gripping Lexi's hair, sexual tension, intimate atmosphere, soft warm lighting, high detail, photorealistic",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -84,10 +72,7 @@
   "106": {
     "inputs": {
       "text": "bad quality, worst quality, low quality,",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -106,10 +91,7 @@
   "108": {
     "inputs": {
       "text": "hand, close-up, amateur photo, film grain",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -121,10 +103,7 @@
       "guide_size": 1024,
       "guide_size_for": true,
       "max_size": 1024,
-      "seed": [
-        "112",
-        0
-      ],
+      "seed": ["112", 0],
       "steps": 5,
       "cfg": 1,
       "sampler_name": "lcm",
@@ -144,46 +123,19 @@
       "sam_mask_hint_use_negative": "False",
       "drop_size": 10,
       "wildcard": "",
-      "cycle": [
-        "107",
-        0
-      ],
+      "cycle": ["107", 0],
       "inpaint_model": false,
       "noise_mask_feather": 20,
       "tiled_encode": false,
       "tiled_decode": false,
-      "image": [
-        "140",
-        0
-      ],
-      "model": [
-        "186",
-        0
-      ],
-      "clip": [
-        "186",
-        1
-      ],
-      "vae": [
-        "1",
-        2
-      ],
-      "positive": [
-        "108",
-        0
-      ],
-      "negative": [
-        "106",
-        0
-      ],
-      "bbox_detector": [
-        "105",
-        0
-      ],
-      "sam_model_opt": [
-        "104",
-        0
-      ]
+      "image": ["140", 0],
+      "model": ["186", 0],
+      "clip": ["186", 1],
+      "vae": ["1", 2],
+      "positive": ["108", 0],
+      "negative": ["106", 0],
+      "bbox_detector": ["105", 0],
+      "sam_model_opt": ["104", 0]
     },
     "class_type": "FaceDetailer",
     "_meta": {
@@ -201,18 +153,9 @@
   },
   "125": {
     "inputs": {
-      "anything": [
-        "186",
-        0
-      ],
-      "anything2": [
-        "186",
-        1
-      ],
-      "anything3": [
-        "1",
-        2
-      ]
+      "anything": ["186", 0],
+      "anything2": ["186", 1],
+      "anything3": ["1", 2]
     },
     "class_type": "Anything Everywhere",
     "_meta": {
@@ -224,14 +167,8 @@
       "lora_name": "base\\dmd2_sdxl_4step_lora.safetensors",
       "strength_model": 1.0000000000000002,
       "strength_clip": 1.0000000000000002,
-      "model": [
-        "1",
-        0
-      ],
-      "clip": [
-        "1",
-        1
-      ]
+      "model": ["1", 0],
+      "clip": ["1", 1]
     },
     "class_type": "LoraLoader",
     "_meta": {
@@ -249,10 +186,7 @@
   },
   "130": {
     "inputs": {
-      "anything": [
-        "129",
-        0
-      ]
+      "anything": ["129", 0]
     },
     "class_type": "Anything Everywhere",
     "_meta": {
@@ -261,14 +195,8 @@
   },
   "131": {
     "inputs": {
-      "+ve": [
-        "79",
-        0
-      ],
-      "-ve": [
-        "4",
-        0
-      ]
+      "+ve": ["79", 0],
+      "-ve": ["4", 0]
     },
     "class_type": "Prompts Everywhere",
     "_meta": {
@@ -287,10 +215,7 @@
   "138": {
     "inputs": {
       "text": "bad quality, worst quality, low quality, ",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -300,10 +225,7 @@
   "139": {
     "inputs": {
       "text": "young woman",
-      "clip": [
-        "186",
-        1
-      ]
+      "clip": ["186", 1]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -315,10 +237,7 @@
       "guide_size": 1152,
       "guide_size_for": true,
       "max_size": 1152,
-      "seed": [
-        "137",
-        0
-      ],
+      "seed": ["137", 0],
       "steps": 1,
       "cfg": 1,
       "sampler_name": "lcm",
@@ -338,46 +257,19 @@
       "sam_mask_hint_use_negative": "False",
       "drop_size": 10,
       "wildcard": "",
-      "cycle": [
-        "144",
-        0
-      ],
+      "cycle": ["144", 0],
       "inpaint_model": false,
       "noise_mask_feather": 20,
       "tiled_encode": false,
       "tiled_decode": false,
-      "image": [
-        "7",
-        0
-      ],
-      "model": [
-        "186",
-        0
-      ],
-      "clip": [
-        "186",
-        1
-      ],
-      "vae": [
-        "1",
-        2
-      ],
-      "positive": [
-        "139",
-        0
-      ],
-      "negative": [
-        "138",
-        0
-      ],
-      "bbox_detector": [
-        "142",
-        0
-      ],
-      "sam_model_opt": [
-        "143",
-        0
-      ]
+      "image": ["7", 0],
+      "model": ["186", 0],
+      "clip": ["186", 1],
+      "vae": ["1", 2],
+      "positive": ["139", 0],
+      "negative": ["138", 0],
+      "bbox_detector": ["142", 0],
+      "sam_model_opt": ["143", 0]
     },
     "class_type": "FaceDetailer",
     "_meta": {
@@ -423,10 +315,7 @@
   },
   "165": {
     "inputs": {
-      "seed": [
-        "145",
-        0
-      ],
+      "seed": ["145", 0],
       "steps": 30,
       "cfg": 1,
       "nag_scale": 5,
@@ -436,26 +325,11 @@
       "sampler_name": "lcm",
       "scheduler": "beta",
       "denoise": 1,
-      "positive": [
-        "79",
-        0
-      ],
-      "negative": [
-        "4",
-        0
-      ],
-      "nag_negative": [
-        "4",
-        0
-      ],
-      "latent_image": [
-        "6",
-        0
-      ],
-      "model": [
-        "186",
-        0
-      ]
+      "positive": ["79", 0],
+      "negative": ["4", 0],
+      "nag_negative": ["4", 0],
+      "latent_image": ["6", 0],
+      "model": ["186", 0]
     },
     "class_type": "KSamplerWithNAG",
     "_meta": {
@@ -675,10 +549,7 @@
   "200": {
     "inputs": {
       "filename_prefix": "ComfyUI",
-      "images": [
-        "111",
-        0
-      ]
+      "images": ["111", 0]
     },
     "class_type": "SaveImage",
     "_meta": {
@@ -687,18 +558,9 @@
   },
   "186": {
     "inputs": {
-      "model": [
-        "126",
-        0
-      ],
-      "clip": [
-        "126",
-        1
-      ],
-      "lora_stack": [
-        "185",
-        0
-      ]
+      "model": ["126", 0],
+      "clip": ["126", 1],
+      "lora_stack": ["185", 0]
     },
     "class_type": "CR Apply LoRA Stack",
     "_meta": {

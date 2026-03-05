@@ -2,10 +2,7 @@
   "60": {
     "inputs": {
       "filename_prefix": "ComfyUI",
-      "images": [
-        "433:8",
-        0
-      ]
+      "images": ["433:8", 0]
     },
     "class_type": "SaveImage",
     "_meta": {
@@ -33,10 +30,7 @@
   "433:75": {
     "inputs": {
       "strength": 1,
-      "model": [
-        "433:66",
-        0
-      ]
+      "model": ["433:66", 0]
     },
     "class_type": "CFGNorm",
     "_meta": {
@@ -46,18 +40,9 @@
   "433:110": {
     "inputs": {
       "prompt": "",
-      "clip": [
-        "433:38",
-        0
-      ],
-      "vae": [
-        "433:39",
-        0
-      ],
-      "image1": [
-        "433:117",
-        0
-      ]
+      "clip": ["433:38", 0],
+      "vae": ["433:39", 0],
+      "image1": ["433:117", 0]
     },
     "class_type": "TextEncodeQwenImageEditPlus",
     "_meta": {
@@ -67,10 +52,7 @@
   "433:66": {
     "inputs": {
       "shift": 3,
-      "model": [
-        "433:89",
-        0
-      ]
+      "model": ["433:89", 0]
     },
     "class_type": "ModelSamplingAuraFlow",
     "_meta": {
@@ -79,14 +61,8 @@
   },
   "433:8": {
     "inputs": {
-      "samples": [
-        "433:3",
-        0
-      ],
-      "vae": [
-        "433:39",
-        0
-      ]
+      "samples": ["433:3", 0],
+      "vae": ["433:39", 0]
     },
     "class_type": "VAEDecode",
     "_meta": {
@@ -115,14 +91,8 @@
   },
   "433:120": {
     "inputs": {
-      "pixels": [
-        "433:117",
-        0
-      ],
-      "vae": [
-        "433:39",
-        0
-      ]
+      "pixels": ["433:117", 0],
+      "vae": ["433:39", 0]
     },
     "class_type": "VAEEncode",
     "_meta": {
@@ -131,10 +101,7 @@
   },
   "433:117": {
     "inputs": {
-      "image": [
-        "78",
-        0
-      ]
+      "image": ["78", 0]
     },
     "class_type": "FluxKontextImageScale",
     "_meta": {
@@ -143,22 +110,10 @@
   },
   "433:111": {
     "inputs": {
-      "prompt": [
-        "435",
-        0
-      ],
-      "clip": [
-        "433:38",
-        0
-      ],
-      "vae": [
-        "433:39",
-        0
-      ],
-      "image1": [
-        "433:117",
-        0
-      ]
+      "prompt": ["435", 0],
+      "clip": ["433:38", 0],
+      "vae": ["433:39", 0],
+      "image1": ["433:117", 0]
     },
     "class_type": "TextEncodeQwenImageEditPlus",
     "_meta": {
@@ -179,10 +134,7 @@
     "inputs": {
       "lora_name": "QWEN\\Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors",
       "strength_model": 1,
-      "model": [
-        "433:37",
-        0
-      ]
+      "model": ["433:37", 0]
     },
     "class_type": "LoraLoaderModelOnly",
     "_meta": {
@@ -197,22 +149,10 @@
       "sampler_name": "dpmpp_2m",
       "scheduler": "simple",
       "denoise": 1,
-      "model": [
-        "433:75",
-        0
-      ],
-      "positive": [
-        "433:111",
-        0
-      ],
-      "negative": [
-        "433:110",
-        0
-      ],
-      "latent_image": [
-        "433:120",
-        0
-      ]
+      "model": ["433:75", 0],
+      "positive": ["433:111", 0],
+      "negative": ["433:110", 0],
+      "latent_image": ["433:120", 0]
     },
     "class_type": "KSampler",
     "_meta": {
@@ -223,10 +163,7 @@
     "inputs": {
       "lora_name": "QWEN\\SEXGOD_FemaleNudity_QwenEdit_2511_v1_5.safetensors",
       "strength_model": 1,
-      "model": [
-        "433:121",
-        0
-      ]
+      "model": ["433:121", 0]
     },
     "class_type": "LoraLoaderModelOnly",
     "_meta": {
