@@ -31,10 +31,12 @@ function PersonaSelectionView() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		getPersonas().then((list) => {
-			setPersonas(list);
-			setLoading(false);
-		}).catch(() => setLoading(false));
+		getPersonas()
+			.then((list) => {
+				setPersonas(list);
+				setLoading(false);
+			})
+			.catch(() => setLoading(false));
 	}, []);
 
 	if (loading) {
@@ -52,22 +54,30 @@ function PersonaSelectionView() {
 					<ChevronLeft size={20} strokeWidth={2} className="text-text" />
 					<span className="text-[14px] font-medium text-text">Back</span>
 				</Link>
-				<h1 className="text-[14px] font-semibold text-text">Select Character</h1>
+				<h1 className="text-[14px] font-semibold text-text">
+					Select Character
+				</h1>
 				<div className="w-[54px]" />
 			</header>
 
 			<div className="flex flex-col gap-3 px-6 pt-5 pb-8">
 				{personas.length === 0 ? (
 					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-						<p className="text-[15px] font-semibold text-text">No characters yet</p>
-						<p className="text-[13px] text-text-muted">Create a character in Settings to get started.</p>
+						<p className="text-[15px] font-semibold text-text">
+							No characters yet
+						</p>
+						<p className="text-[13px] text-text-muted">
+							Create a character in Settings to get started.
+						</p>
 					</div>
 				) : (
 					personas.map((p) => (
 						<button
 							key={p.id}
 							type="button"
-							onClick={() => navigate({ to: "/generate", search: { personaId: p.id } })}
+							onClick={() =>
+								navigate({ to: "/generate", search: { personaId: p.id } })
+							}
 							className="flex items-center gap-[14px] rounded-2xl bg-white px-4 py-4 text-left [box-shadow:0_2px_12px_#1A191808] active:opacity-70 transition-opacity"
 						>
 							<div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl bg-surface-muted">
@@ -75,12 +85,16 @@ function PersonaSelectionView() {
 									src={p.avatar}
 									alt={p.name}
 									className="h-full w-full object-cover"
-									onError={(e) => { e.currentTarget.style.display = "none"; }}
+									onError={(e) => {
+										e.currentTarget.style.display = "none";
+									}}
 								/>
 							</div>
 							<div className="flex min-w-0 flex-1 flex-col gap-0.5">
 								<p className="text-[15px] font-semibold text-text">{p.name}</p>
-								<p className="truncate text-[13px] text-text-muted">{p.description}</p>
+								<p className="truncate text-[13px] text-text-muted">
+									{p.description}
+								</p>
 							</div>
 						</button>
 					))
@@ -173,7 +187,11 @@ function GenerateSetupPage() {
 		<div className="flex flex-col min-h-full">
 			{/* Header */}
 			<header className="sticky top-0 z-10 bg-bg flex items-center justify-between px-5 pt-14 pb-3">
-				<Link to="/generate" search={{ personaId: "" }} className="flex items-center gap-2">
+				<Link
+					to="/generate"
+					search={{ personaId: "" }}
+					className="flex items-center gap-2"
+				>
 					<ChevronLeft size={20} strokeWidth={2} className="text-text" />
 					<span className="text-[14px] font-medium text-text">Back</span>
 				</Link>
