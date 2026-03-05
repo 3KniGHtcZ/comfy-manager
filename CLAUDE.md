@@ -15,7 +15,7 @@ npm run ci       # Full pipeline check: lint + tsc + test + build — run before
 
 > **Before every `git push`** run `npm run ci` to catch lint, type, test and build errors locally before they fail in CI.
 
-No test framework is configured. **Biome** is used for formatting and linting (`biome.json`).
+**Biome** is used for formatting and linting (`biome.json`). **Vitest** is used for testing.
 
 ## Architecture
 
@@ -27,37 +27,47 @@ This is a full-stack app for managing ComfyUI image generation workflows. It run
 
 File-based routing via TanStack Router. Routes live in `src/routes/` and auto-generate `routeTree.gen.ts`. Each route exports a `Route` object via `createFileRoute()`.
 
-The root layout (`src/routes/__root.tsx`) wraps everything with `GenerationProvider` (context) and renders a global `TabBar` that auto-hides on certain routes.
+The root layout (`src/routes/__root.tsx`) wraps everything with `GenerationProvider` and `EditProvider` (contexts) and renders a global `TabBar` and `InstallBanner` that auto-hide on certain routes.
 
 ### Server Functions
 
 Backend logic uses `createServerFn()` from `@tanstack/react-start` in `src/server/`. These are type-safe RPC calls — no manual HTTP endpoints needed. Each function has `.inputValidator()` and `.handler()`.
 
-Key server modules:
-- `comfyui.ts` — ComfyUI API integration (status, prompt queueing, image fetching)
-- `sse.ts` — WebSocket-to-SSE bridge (connects to ComfyUI's `/ws`, streams events to client)
+Key server modules (`src/server/`):
+- `comfyClient.ts` — Low-level ComfyUI WebSocket client singleton (`getComfyApi`)
+- `comfyui.ts` — High-level ComfyUI server functions (status, prompt queueing, image fetching)
+- `workflows.ts` — Builds ComfyUI API-format workflow objects from params
 - `generations.ts` — CRUD for generation records
+- `edits.ts` — CRUD for edit records
 - `personas.ts` — CRUD for personas
 - `settings.ts` — App settings
-- `workflows.ts` — Builds ComfyUI API-format workflow objects
+
+Nitro API routes (`server/routes/api/`) use relative imports to `src/` — these are **not** TanStack server functions:
+- `sse.ts` — WebSocket-to-SSE bridge (proxies ComfyUI's `/ws` to client as SSE)
+- `generate.ts`, `edit.ts` — Queue ComfyUI prompts
+- `generation-update.ts`, `edit-update.ts` — Update record status
+- `image.ts` — Proxy ComfyUI image requests
+- `upload-image.ts` — Upload images to ComfyUI
 
 ### Generation Lifecycle (Two-Phase)
 
-Generation uses a prepare/execute split to avoid TanStack Start revalidation issues:
+Both image generation and image editing use a prepare/execute split to avoid TanStack Start revalidation issues:
 
-1. **Prepare** (on `/generate`): Stores params synchronously, sets status to `'preparing'`, navigates to `/generating`. No server calls.
-2. **Execute** (on `/generating`): `useEffect` detects preparing status, calls server functions to create records and queue prompts, opens SSE for real-time progress.
+1. **Prepare** (on `/generate` or `/edit`): Stores params synchronously in context, sets status to `'preparing'`, navigates to `/generating` or `/editing`. No server calls.
+2. **Execute** (on `/generating` or `/editing`): `useEffect` detects preparing status, calls server functions to create records and queue prompts, opens SSE for real-time progress.
 
 Batch items are processed sequentially — each queued as a separate ComfyUI prompt. The `useSSE` hook handles connection, retry (up to 3 attempts), and event parsing.
 
 ### Data Persistence
 
-JSON files in `data/` directory (`personas.json`, `generations.json`, `settings.json`). Server functions read/write these directly via `readFile`/`writeFile`.
+JSON files in `data/` directory (`personas.json`, `generations.json`, `edits.json`, `settings.json`). Server functions read/write these directly via `readFile`/`writeFile`.
 
 ### State Management
 
-- `GenerationContext` (`src/contexts/`) — global generation state via React context
-- `useGeneration` hook — orchestrates the full lifecycle with refs for batch queues and collected images
+- `GenerationContext` (`src/contexts/GenerationContext.tsx`) — global generation state
+- `EditContext` (`src/contexts/EditContext.tsx`) — global edit state
+- `useGeneration` hook — orchestrates the generation lifecycle with refs for batch queues and collected images
+- `useEdit` hook — orchestrates the edit lifecycle
 - `useSSE` hook — SSE streaming with AbortController cleanup
 
 ## Conventions
@@ -97,15 +107,16 @@ JSON files in `data/` directory (`personas.json`, `generations.json`, `settings.
 
 - **Order:** 1) external packages → 2) internal `~/` modules → 3) `import type` last
 - Always use `~/` alias — never relative paths (`../../components/...`)
+- Exception: `server/routes/api/` files must use relative paths to `src/` (no `~/` alias)
 - Biome `organizeImports` is enabled and runs automatically
 
 ### Styling
 
-- **Path alias:** `~/*` maps to `src/*`. Always use `~/` imports, not relative paths.
 - **Tailwind v4** with `@theme` design tokens in `src/styles/app.css`
 - Always use `cn()` from `~/lib/utils` for `className` — never string concatenation
 - **Icons:** `lucide-react`
-- **UI components:** `src/components/ui/` with barrel export from `index.ts`. The app-level `TabBar` (`~/components/TabBar.tsx`) is separate from the UI library's `tabBar.tsx`.
+- **UI components:** `src/components/ui/` with barrel export from `index.ts`
+  - App-level components (`TabBar`, `InstallBanner`, etc.) live in `src/components/` — separate from the UI library
 - **Radix primitives:** `@radix-ui/react-radio-group` (toggle-switch), `@radix-ui/react-slider` (slider)
 - **Font:** Outfit (Google Fonts, loaded in `__root.tsx`)
 
@@ -116,7 +127,22 @@ JSON files in `data/` directory (`personas.json`, `generations.json`, `settings.
 
 ### Design Tokens
 
-Primary: `#3D8A5A` / Background: `#FAF9F7` / Surface: `#FFFFFF` / Border: `#D1D0CD` / Text: `#1A1918`
+Defined in `src/styles/app.css` under `@theme`:
+
+| Token | Value |
+|---|---|
+| `--color-primary` | `#3D8A5A` |
+| `--color-primary-light` | `#C8F0D8` |
+| `--color-primary-dark` | `#2E6B45` |
+| `--color-bg` | `#F5F4F1` |
+| `--color-surface` | `#FFFFFF` |
+| `--color-surface-muted` | `#EDECEA` |
+| `--color-border` | `#D1D0CD` |
+| `--color-border-light` | `#E5E4E1` |
+| `--color-text` | `#1A1918` |
+| `--color-text-secondary` | `#6D6C6A` |
+| `--color-text-muted` | `#9C9B99` |
+| `--color-text-inactive` | `#A8A7A5` |
 
 ## Environment
 
