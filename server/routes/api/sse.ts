@@ -5,7 +5,7 @@ import type {
   TProgress,
 } from "comfyui-node";
 import { defineEventHandler, getQuery, setResponseHeaders } from "h3";
-import { getComfyApi } from "../../../src/server/comfy-client";
+import { getComfyApi } from "../../../src/server/comfyClient";
 
 function sseEvent(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
