@@ -17,10 +17,10 @@ Vitest (tests), and Vite (build).
 Run these four commands independently from the project root, capturing both
 stdout and stderr for each:
 
-1. **Lint** — `npm run lint`
-2. **Types** — `npx tsc --noEmit`
-3. **Tests** — `npm run test`
-4. **Build** — `npm run build`
+1. **Lint** — `yarn lint`
+2. **Types** — `yarn tsc --noEmit`
+3. **Tests** — `yarn test`
+4. **Build** — `yarn build`
 
 Don't chain them — run each one separately so a failure in step 1 doesn't
 hide failures in steps 2–4.
@@ -43,25 +43,25 @@ After all four run, report using this format:
 If any check failed, attempt to fix the issues:
 
 ### Lint failures
-Run `npx biome check --write src/` to auto-fix formatting and lint errors,
-then re-run `npm run lint` to confirm it's clean.
+Run `yarn biome check --write src/` to auto-fix formatting and lint errors,
+then re-run `yarn lint` to confirm it's clean.
 
 ### Type errors (tsc)
 Read the failing files, understand the type errors from the tsc output, and
-fix them by editing the source. Re-run `npx tsc --noEmit` to confirm.
+fix them by editing the source. Re-run `yarn tsc --noEmit` to confirm.
 
 ### Test failures
 Read the test output to understand which tests fail and why. Read both the
 test file and the source file it tests. Fix the source (or the test if it's
-clearly wrong). Re-run `npm run test` to confirm.
+clearly wrong). Re-run `yarn test` to confirm.
 
 ### Build failures
 Read the build error output, identify the cause (usually an import error or
-missing type), fix it, and re-run `npm run build` to confirm.
+missing type), fix it, and re-run `yarn build` to confirm.
 
 ## Phase 3 — Final report
 
-After attempting all fixes, run the full `npm run ci` once more to get a
+After attempting all fixes, run the full `yarn ci` once more to get a
 clean final result.
 
 - **All pass** → Tell the user CI is green and they can proceed to create
