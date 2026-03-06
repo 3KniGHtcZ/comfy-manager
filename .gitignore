@@ -9,6 +9,8 @@ images/
 .tanstack/
 .playwright-mcp/
 .claude/
+!.claude/settings.json
+!.claude/hooks/
 *.png
 !public/**/*.png
 data/generations.json
