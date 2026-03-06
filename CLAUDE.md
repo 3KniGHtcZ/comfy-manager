@@ -2,18 +2,22 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Package manager
+
+**Always use `yarn`** — never `npm` or `npx`. Use `yarn` for installing packages, running scripts, and all CLI invocations.
+
 ## Commands
 
 ```bash
-npm run dev      # Dev server with HMR on http://localhost:3000
-npm run build    # Production build (SSR, outputs to .output/)
-npm start        # Run production build (node .output/server/index.mjs)
-npm run lint     # Biome lint check (src/ only)
-npm run test     # Run tests (vitest)
-npm run ci       # Full pipeline check: lint + tsc + test + build — run before every push
+yarn dev      # Dev server with HMR on http://localhost:3000
+yarn build    # Production build (SSR, outputs to .output/)
+yarn start    # Run production build (node .output/server/index.mjs)
+yarn lint     # Biome lint check (src/ only)
+yarn test     # Run tests (vitest)
+yarn ci       # Full pipeline check: lint + tsc + test + build — run before every push
 ```
 
-> **Before every `git push`** run `npm run ci` to catch lint, type, test and build errors locally before they fail in CI.
+> **Before every `git push`** run `yarn ci` to catch lint, type, test and build errors locally before they fail in CI.
 
 **Biome** is used for formatting and linting (`biome.json`). **Vitest** is used for testing.
 
