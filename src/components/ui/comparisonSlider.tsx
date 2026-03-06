@@ -1,5 +1,5 @@
 import { ChevronsLeftRight } from "lucide-react";
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -33,6 +33,23 @@ export const ComparisonSlider: FC<ComparisonSliderProps> = ({
   afterLabel = "After",
   className,
 }) => {
+  const [naturalSize, setNaturalSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      setNaturalSize({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.src = beforeSrc;
+  }, [beforeSrc]);
+
+  const paddingTop = naturalSize
+    ? `${(naturalSize.height / naturalSize.width) * 100}%`
+    : "100%";
+
   return (
     <div
       className={cn(
@@ -40,13 +57,17 @@ export const ComparisonSlider: FC<ComparisonSliderProps> = ({
         className,
       )}
     >
-      <ReactCompareSlider
-        itemOne={<ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />}
-        itemTwo={<ReactCompareSliderImage src={afterSrc} alt={afterLabel} />}
-        handle={<ComparisonHandle />}
-        position={50}
-        style={{ height: "100%" }}
-      />
+      <div style={{ paddingTop }} />
+
+      <div className="absolute inset-0">
+        <ReactCompareSlider
+          itemOne={<ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />}
+          itemTwo={<ReactCompareSliderImage src={afterSrc} alt={afterLabel} />}
+          handle={<ComparisonHandle />}
+          position={50}
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
 
       <div className="absolute bottom-4 left-4 pointer-events-none">
         <span className="px-3 py-1.5 rounded-[6px] bg-black/30 text-[12px] font-semibold text-white font-[Outfit]">

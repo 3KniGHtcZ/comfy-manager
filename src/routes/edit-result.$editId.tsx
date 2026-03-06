@@ -144,7 +144,6 @@ function EditResultPage() {
             afterSrc={resultUrl}
             beforeLabel="Before"
             afterLabel="After"
-            className="h-[380px]"
           />
         ) : (
           <div className="flex h-[380px] items-center justify-center rounded-[20px] bg-surface-muted">
