@@ -1,5 +1,5 @@
 import { ChevronsLeftRight } from "lucide-react";
-import { useEffect, useState, type FC } from "react";
+import { type FC, useEffect, useState } from "react";
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -61,7 +61,9 @@ export const ComparisonSlider: FC<ComparisonSliderProps> = ({
 
       <div className="absolute inset-0">
         <ReactCompareSlider
-          itemOne={<ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />}
+          itemOne={
+            <ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />
+          }
           itemTwo={<ReactCompareSliderImage src={afterSrc} alt={afterLabel} />}
           handle={<ComparisonHandle />}
           position={50}
