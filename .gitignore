@@ -11,6 +11,7 @@ images/
 .claude/
 !.claude/settings.json
 !.claude/hooks/
+!.claude/skills/
 *.png
 !public/**/*.png
 data/generations.json
