@@ -86,9 +86,9 @@ function EditResultPage() {
   }[edit.status] ?? { label: edit.status, variant: "white" as const };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-dvh overflow-hidden">
       {/* Header with download button */}
-      <div className="relative flex items-center justify-between w-full px-6 py-4 pt-14">
+      <div className="shrink-0 relative flex items-center justify-between w-full px-6 py-4 pt-14">
         <button
           type="button"
           onClick={() => navigate({ to: "/" })}
@@ -126,9 +126,9 @@ function EditResultPage() {
         </button>
       </div>
 
-      <div className="flex flex-col gap-5 px-6 pt-3 pb-8">
+      <div className="flex flex-col flex-1 min-h-0 gap-5 px-6 pt-3 pb-8">
         {/* Status row */}
-        <div className="flex items-center gap-2">
+        <div className="shrink-0 flex items-center gap-2">
           <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
           {edit.params && (
             <span className="text-[12px] text-text-muted">
@@ -138,26 +138,30 @@ function EditResultPage() {
         </div>
 
         {/* Comparison Slider */}
-        {sourceUrl && resultUrl ? (
-          <ComparisonSlider
-            beforeSrc={sourceUrl}
-            afterSrc={resultUrl}
-            beforeLabel="Before"
-            afterLabel="After"
-          />
-        ) : (
-          <div className="flex h-[380px] items-center justify-center rounded-[20px] bg-surface-muted">
-            {sourceUrl || resultUrl ? (
-              <div className="h-10 w-10 animate-spin rounded-full border-3 border-primary border-t-transparent" />
-            ) : (
-              <p className="text-text-muted text-[14px]">No images available</p>
-            )}
-          </div>
-        )}
+        <div className="flex-1 min-h-0 flex items-center justify-center">
+          {sourceUrl && resultUrl ? (
+            <ComparisonSlider
+              beforeSrc={sourceUrl}
+              afterSrc={resultUrl}
+              beforeLabel="Before"
+              afterLabel="After"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center rounded-[20px] bg-surface-muted">
+              {sourceUrl || resultUrl ? (
+                <div className="h-10 w-10 animate-spin rounded-full border-3 border-primary border-t-transparent" />
+              ) : (
+                <p className="text-text-muted text-[14px]">
+                  No images available
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Result thumbnails if multiple batch items */}
         {edit.resultImages.length > 1 && (
-          <div className="flex gap-[10px]">
+          <div className="shrink-0 flex gap-[10px]">
             {edit.resultImages.map((img, i) => (
               <button
                 type="button"
@@ -178,7 +182,7 @@ function EditResultPage() {
         )}
 
         {/* Action buttons */}
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="shrink-0 flex flex-col gap-3 pt-2">
           <Button
             variant="primary"
             icon={<Download size={20} />}

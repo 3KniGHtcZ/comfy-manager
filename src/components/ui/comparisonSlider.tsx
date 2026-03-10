@@ -46,30 +46,25 @@ export const ComparisonSlider: FC<ComparisonSliderProps> = ({
     img.src = beforeSrc;
   }, [beforeSrc]);
 
-  const paddingTop = naturalSize
-    ? `${(naturalSize.height / naturalSize.width) * 100}%`
-    : "100%";
+  const aspectRatio = naturalSize
+    ? `${naturalSize.width} / ${naturalSize.height}`
+    : "1 / 1";
 
   return (
     <div
       className={cn(
-        "relative w-full rounded-[20px] overflow-hidden bg-[#EDECEA]",
+        "relative rounded-[20px] overflow-hidden bg-[#EDECEA]",
         className,
       )}
+      style={{ width: "100%", aspectRatio, maxHeight: "100%" }}
     >
-      <div style={{ paddingTop }} />
-
-      <div className="absolute inset-0">
-        <ReactCompareSlider
-          itemOne={
-            <ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />
-          }
-          itemTwo={<ReactCompareSliderImage src={afterSrc} alt={afterLabel} />}
-          handle={<ComparisonHandle />}
-          position={50}
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
+      <ReactCompareSlider
+        itemOne={<ReactCompareSliderImage src={beforeSrc} alt={beforeLabel} />}
+        itemTwo={<ReactCompareSliderImage src={afterSrc} alt={afterLabel} />}
+        handle={<ComparisonHandle />}
+        position={50}
+        style={{ width: "100%", height: "100%" }}
+      />
 
       <div className="absolute bottom-4 left-4 pointer-events-none">
         <span className="px-3 py-1.5 rounded-[6px] bg-black/30 text-[12px] font-semibold text-white font-[Outfit]">
