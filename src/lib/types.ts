@@ -9,6 +9,11 @@ export interface Persona {
   workflowFile?: string;
 }
 
+export interface LoraSlotSelection {
+  loraName: string;
+  weight: number;
+}
+
 export interface GenerationParams {
   personaId: string;
   prompt: string;
@@ -19,6 +24,8 @@ export interface GenerationParams {
   seed?: number;
   cfg: number;
   batchCount: number;
+  /** Configurable LoRA stacker slots (keyed by slot number). Only used by personas with a LoRA Stacker workflow. */
+  loraSlots?: Record<number, LoraSlotSelection>;
 }
 
 export interface Generation {

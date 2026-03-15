@@ -9,6 +9,7 @@ import type {
 import {
   type ComfyWorkflow,
   injectLoraModel,
+  injectLoraStackerSlots,
   injectPrompt,
   injectResolution,
   injectSampler,
@@ -94,6 +95,11 @@ export default defineEventHandler(async (event) => {
     // Inject LoRA if needed
     if (persona.loraName && !persona.workflowFile) {
       injectLoraModel(workflow, persona.loraName, persona.loraStrength ?? 1.0);
+    }
+
+    // Inject configurable LoRA Stacker slots (Ela workflow)
+    if (params.loraSlots) {
+      injectLoraStackerSlots(workflow, params.loraSlots);
     }
 
     // Queue prompt to ComfyUI via library

@@ -247,6 +247,43 @@ export function injectLoraModel(
 
 const LORA_CLASSES = new Set(["LoraLoader", "LoraLoaderModelOnly"]);
 
+const LORA_STACKER_CLASS = "LoRA Stacker";
+
+/**
+ * Find the node ID of the LoRA Stacker node.
+ */
+function findLoraStackerNodeId(workflow: ComfyWorkflow): string | undefined {
+  const byClass = Object.keys(workflow).find(
+    (id) => workflow[id]?.class_type === LORA_STACKER_CLASS,
+  );
+  if (byClass) return byClass;
+  if (workflow["185"]?.inputs?.lora_name_1 !== undefined) return "185";
+  return undefined;
+}
+
+/** Slot 1 is reserved for the fixed character LoRA (ela01). */
+const PROTECTED_STACKER_SLOTS = new Set([1]);
+
+/**
+ * Inject LoRA selections into specific slots of a "LoRA Stacker" node.
+ * Protected slots (slot 1 = character LoRA) are never overwritten.
+ */
+export function injectLoraStackerSlots(
+  workflow: ComfyWorkflow,
+  slots: Record<number, { loraName: string; weight: number }>,
+): void {
+  const stackerId = findLoraStackerNodeId(workflow);
+  if (!stackerId || !workflow[stackerId]?.inputs) return;
+
+  const inputs = workflow[stackerId].inputs;
+  for (const [slotNum, selection] of Object.entries(slots)) {
+    const n = Number(slotNum);
+    if (PROTECTED_STACKER_SLOTS.has(n)) continue;
+    inputs[`lora_name_${n}`] = selection.loraName;
+    inputs[`lora_wt_${n}`] = selection.weight;
+  }
+}
+
 /**
  * Set strength_model (and strength_clip where present) on LoRA nodes.
  *

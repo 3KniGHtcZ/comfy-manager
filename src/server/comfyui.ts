@@ -6,6 +6,8 @@ import type {
 } from "~/lib/comfyuiTypes";
 import { getComfyApi } from "~/server/comfyClient";
 
+const COMFYUI_URL = process.env.COMFYUI_URL ?? "http://127.0.0.1:8188";
+
 // ---------------------------------------------------------------------------
 // Server functions
 // ---------------------------------------------------------------------------
@@ -76,6 +78,21 @@ export const getHistory = createServerFn({ method: "GET" })
     };
     return mapped;
   });
+
+/**
+ * Fetch available LoRA model filenames from ComfyUI, filtered to the SDXL subfolder.
+ */
+export const getAvailableLoras = createServerFn({ method: "GET" }).handler(
+  async (): Promise<string[]> => {
+    const res = await fetch(`${COMFYUI_URL}/object_info/LoraLoader`);
+    if (!res.ok) throw new Error("Failed to fetch LoRA info from ComfyUI");
+    // biome-ignore lint/suspicious/noExplicitAny: dynamic ComfyUI API response
+    const data: any = await res.json();
+    const loraNames: string[] =
+      data?.LoraLoader?.input?.required?.lora_name?.[0] ?? [];
+    return ["None", ...loraNames.filter((n: string) => n.startsWith("SDXL\\"))];
+  },
+);
 
 /**
  * Interrupt the currently running generation on ComfyUI.
