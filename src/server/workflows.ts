@@ -6,6 +6,7 @@ import type { GenerationParams, Persona } from "~/lib/types";
 import {
   type ComfyWorkflow,
   injectLoraModel,
+  injectLoraStackerSlots,
   injectPrompt,
   injectResolution,
   injectSampler,
@@ -106,6 +107,11 @@ export const buildPrompt = createServerFn({ method: "POST" })
     // Inject LoRA from persona — skip when a custom workflow already embeds it
     if (persona.loraName && !persona.workflowFile) {
       injectLoraModel(workflow, persona.loraName, persona.loraStrength ?? 1.0);
+    }
+
+    // Inject configurable LoRA Stacker slots (Ela workflow)
+    if (params.loraSlots) {
+      injectLoraStackerSlots(workflow, params.loraSlots);
     }
 
     return workflow;

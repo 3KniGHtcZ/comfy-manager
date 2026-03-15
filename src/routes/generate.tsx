@@ -1,12 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { LoraSlotPicker } from "~/components/loraSlotPicker";
 import { Slider } from "~/components/ui/slider";
 import { Stepper } from "~/components/ui/stepper";
 import { ToggleSwitch } from "~/components/ui/toggleSwitch";
 import { useGenerationContext } from "~/contexts/GenerationContext";
-import type { GenerationParams, Persona } from "~/lib/types";
+import type { GenerationParams, LoraSlotSelection, Persona } from "~/lib/types";
 import { cn } from "~/lib/utils";
+import { getAvailableLoras } from "~/server/comfyui";
 import { getPersona, getPersonas } from "~/server/personas";
 import { getSettings } from "~/server/settings";
 
@@ -123,6 +125,18 @@ function GenerateSetupPage() {
   const [seedMode, setSeedMode] = useState<"random" | "fixed">("random");
   const [seed, setSeed] = useState(42);
   const [batchCount, setBatchCount] = useState(4);
+  const [availableLoras, setAvailableLoras] = useState<string[]>([]);
+  const [loraSlots, setLoraSlots] = useState<Record<number, LoraSlotSelection>>(
+    {
+      2: {
+        loraName: "SDXL\\leaked_nudes_style_v1_fixed.safetensors",
+        weight: 1,
+      },
+      3: { loraName: "SDXL\\realcumv6.55.safetensors", weight: 0 },
+      4: { loraName: "None", weight: 0 },
+      5: { loraName: "None", weight: 0 },
+    },
+  );
 
   const maxPromptLength = 500;
 
@@ -135,6 +149,15 @@ function GenerateSetupPage() {
         ]);
 
         if (personaResult) setPersona(personaResult);
+
+        if (personaResult?.id === "ela") {
+          try {
+            const loras = await getAvailableLoras();
+            setAvailableLoras(loras);
+          } catch {
+            // LoRA list unavailable — picker won't render
+          }
+        }
 
         setSteps(settings.defaults.steps);
         setCfg(settings.defaults.cfg);
@@ -164,6 +187,7 @@ function GenerateSetupPage() {
       seed: seedMode === "fixed" ? seed : undefined,
       cfg,
       batchCount,
+      loraSlots: persona.id === "ela" ? loraSlots : undefined,
     };
 
     localStorage.setItem("lastGeneratePrompt", prompt);
@@ -296,6 +320,15 @@ function GenerateSetupPage() {
             Describe the scene, environment and situation
           </p>
         </div>
+
+        {/* LoRA Slots (Ela only) */}
+        {persona?.id === "ela" && availableLoras.length > 0 && (
+          <LoraSlotPicker
+            availableLoras={availableLoras}
+            slots={loraSlots}
+            onChange={setLoraSlots}
+          />
+        )}
 
         {/* Steps */}
         <Slider
