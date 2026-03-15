@@ -9,7 +9,7 @@ import { useGenerationContext } from "~/contexts/GenerationContext";
 import type { GenerationParams, LoraSlotSelection, Persona } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import { getAvailableLoras } from "~/server/comfyui";
-import { getPersona, getPersonas } from "~/server/personas";
+import { getPersona } from "~/server/personas";
 import { getSettings } from "~/server/settings";
 
 export const Route = createFileRoute("/generate")({
@@ -33,8 +33,9 @@ function PersonaSelectionView() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getPersonas()
-      .then((list) => {
+    fetch("/api/personas")
+      .then((res) => res.json())
+      .then((list: Persona[]) => {
         setPersonas(list);
         setLoading(false);
       })

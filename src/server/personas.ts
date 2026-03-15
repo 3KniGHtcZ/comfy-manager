@@ -9,7 +9,8 @@ async function readPersonas(): Promise<Persona[]> {
   try {
     const raw = await readFile(DATA_PATH, "utf-8");
     return JSON.parse(raw);
-  } catch {
+  } catch (err) {
+    console.error("[readPersonas] Failed to read personas:", DATA_PATH, err);
     return [];
   }
 }
